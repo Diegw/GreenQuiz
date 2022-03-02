@@ -3,31 +3,33 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Sirenix.OdinInspector;
 
-public class ScenesManager : MonoBehaviour
+public class ScenesManager : MonoBehaviour, IManager
 {
     public static Action<EScene> OnSceneUnloadedEvent;
     public static Action<EScene> OnSceneLoadedEvent;
 
     [TabGroup("DEBUG"), SerializeField] private string _currentSceneName = "";
-    [TabGroup("DEBUG"), SerializeField] private EScene _currentScene = EScene.NONE;
+    [TabGroup("DEBUG"), SerializeField] private EScene _currentSceneType = EScene.NONE;
     private ScenesManager _instance = null;
+    private SettingsScenes _settingsScenes = null;
 
-    private void Awake()
+    public void Contruct()
     {
-        if(_instance != null)
+        _settingsScenes = SettingsManager.Scenes;
+        if(_settingsScenes == null)
         {
-            Destroy(gameObject);
             return;
         }
-        _instance = this;
-        DontDestroyOnLoad(this);
+        SetCurrentSceneData(_settingsScenes.GetSceneData(_settingsScenes.FirstScene)?.Name);
     }
 
-    private void OnEnable()
+    public void Activate()
     {
         SceneManager.sceneUnloaded += OnSceneUnloaded;
         SceneManager.sceneLoaded += OnSceneLoaded;
+        Splash.OnSceneFinishedEvent += LoadScene;
         Title.OnSceneFinishedEvent += LoadScene;
+
         // Menu.OnSceneFinishedEvent += LoadScene;
         // Results.OnSceneFinishedEvent += LoadScene;
         // Options.OnExitMatchEvent += LoadScene;
@@ -37,10 +39,11 @@ public class ScenesManager : MonoBehaviour
         // MainMenu.OnExitEvent += ExitApplication;
     }
 
-    private void OnDisable()
+    public void Deactivate()
     {
         SceneManager.sceneUnloaded -= OnSceneUnloaded;
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        Splash.OnSceneFinishedEvent -= LoadScene;
         Title.OnSceneFinishedEvent -= LoadScene;
         // Menu.OnSceneFinishedEvent -= LoadScene;
         // Results.OnSceneFinishedEvent -= LoadScene;
@@ -53,19 +56,38 @@ public class ScenesManager : MonoBehaviour
 
     private void OnSceneUnloaded(Scene scene)
     {
-        OnSceneUnloadedEvent?.Invoke(_currentScene);
+        OnSceneUnloadedEvent?.Invoke(_currentSceneType);
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode)
     {
-        _currentSceneName = scene.name;
-        OnSceneLoadedEvent?.Invoke(_currentScene);
+        SetCurrentSceneData(scene.name);
+        OnSceneLoadedEvent?.Invoke(_currentSceneType);
+    }
+
+    private void SetCurrentSceneData(string sceneName)
+    {
+        _currentSceneName = sceneName;
+        if (_settingsScenes != null)
+        {
+            _currentSceneType = _settingsScenes.GetSceneType(sceneName);
+        }
     }
 
     private void LoadScene(EDirection direction)
     {
-        string sceneName = "";
-        SceneManager.LoadScene(sceneName);
+        if(_settingsScenes == null)
+        {
+            Debug.LogError("Couldnt get sceneData because SettingsScenes is null");
+            return;
+        }
+        SceneData scene = _settingsScenes.GetSceneData(_currentSceneType, direction);
+        if(scene == null || scene.Name == "")
+        {
+            Debug.LogError("Couldnt get valid sceneData");
+            return;
+        }
+        SceneManager.LoadScene(scene.Name);
     }
 
     private void ExitApplication()

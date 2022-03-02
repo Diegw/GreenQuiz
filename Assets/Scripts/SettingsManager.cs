@@ -1,23 +1,56 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class SettingsManager : MonoBehaviourCustom
+public class SettingsManager : MonoBehaviour, IManager
 {
-    private SettingsManager instance = null;
-
-    private void Awake()
+    public static SettingsSplash Splash
     {
-        if(instance == null)
+        get
         {
-            instance = this;
-            DontDestroyOnLoad(instance);
+            if(_instance == null || _instance._settingsSplash == null)
+            {
+                return null;
+            }
+            return _instance._settingsSplash;
         }
-        else
+    }
+    public static SettingsTitle Title
+    {
+        get
         {
-            Destroy(gameObject);
+            if(_instance == null || _instance._settingsTitle == null)
+            {
+                return null;
+            }
+            return _instance._settingsTitle;
+        }
+    }
+    public static SettingsScenes Scenes
+    {
+        get
+        {
+            if(_instance == null || _instance._settingsScenes == null)
+            {
+                return null;
+            }
+            return _instance._settingsScenes;
         }
     }
 
-    
+    private static SettingsManager _instance = null;
+    [SerializeField] private SettingsSplash _settingsSplash = null;
+    [SerializeField] private SettingsTitle _settingsTitle = null;
+    [SerializeField] private SettingsScenes _settingsScenes = null;
+
+    public void Contruct()
+    {
+        _instance = this;
+    }
+
+    public void Activate()
+    {
+    }
+
+    public void Deactivate()
+    {
+    }
 }

@@ -1,7 +1,8 @@
 public enum EScene
 {
     NONE = 0,
-    TITLE = 1,
-    MENU = 2,
-    GAMEPLAY = 3,
+    SPLASH = 1,
+    TITLE = 2,
+    MENU = 3,
+    GAMEPLAY = 4,
 }
