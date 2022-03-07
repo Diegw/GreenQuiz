@@ -22,8 +22,17 @@ public class Title : MonoBehaviourCustom
 
     private void Settings()
     {
-        //get settings
-        //use settings
+        SettingsTitle settingsTitle = SettingsManager.Title;
+        if(settingsTitle == null || _background == null || _logo == null)
+        {
+            return;
+        }
+        
+        _background.sprite = settingsTitle.BackgroundSprite.Sprite;
+        _background.color = settingsTitle.BackgroundSprite.Color;
+
+        _logo.sprite = settingsTitle.LogoSprite.Sprite;
+        _logo.color = settingsTitle.LogoSprite.Color;
     }
 
     private void OnEnable()

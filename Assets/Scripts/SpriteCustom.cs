@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-public class SpriteCustom : MonoBehaviour
+[Serializable] public class SpriteCustom
 {
     public Sprite Sprite => _sprite;
     public Color Color => _color;

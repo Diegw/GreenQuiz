@@ -6,6 +6,7 @@ using MEC;
 
 public class ExecutionManager : SerializedMonoBehaviour
 {
+    public static Action OnFirstFrameEvent;
     public static Action OnSetUpReadyEvent;
 
     [SerializeField] private List<IManager> _managers = new List<IManager>();
@@ -13,6 +14,7 @@ public class ExecutionManager : SerializedMonoBehaviour
 
     private void Start()
     {
+        Debug.LogWarning("EXECUTION MANAGER");
         if(_instance != null)
         {
             Destroy(gameObject);
@@ -26,16 +28,17 @@ public class ExecutionManager : SerializedMonoBehaviour
     private IEnumerator<float> WaitForFirstFrame()
     {
         yield return Timing.WaitForOneFrame;
+        OnFirstFrameEvent?.Invoke();
         if(_managers == null || _managers.Count <= 0)
         {
             yield break;
         }
         foreach (IManager manager in _managers)
         {
-            Debug.Log($"MANAGER: {manager}");
             manager.Contruct();
             manager.Activate();
         }
+        Debug.LogWarning("MANAGERS READY");
         OnSetUpReadyEvent?.Invoke();
     }
 }

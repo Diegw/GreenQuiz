@@ -1,7 +1,10 @@
+using System;
 using UnityEngine;
 
 public class SettingsManager : MonoBehaviour, IManager
 {
+    public static Action OnSetUpReadyEvent;
+    
     public static SettingsSplash Splash
     {
         get
@@ -44,6 +47,7 @@ public class SettingsManager : MonoBehaviour, IManager
     public void Contruct()
     {
         _instance = this;
+        OnSetUpReadyEvent?.Invoke();
     }
 
     public void Activate()
