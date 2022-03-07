@@ -38,11 +38,23 @@ public class SettingsManager : MonoBehaviour, IManager
             return _instance._settingsScenes;
         }
     }
+    public static SettingsMenu Menu
+    {
+        get
+        {
+            if(_instance == null || _instance._settingsMenu == null)
+            {
+                return null;
+            }
+            return _instance._settingsMenu;
+        }
+    }
 
     private static SettingsManager _instance = null;
     [SerializeField] private SettingsSplash _settingsSplash = null;
     [SerializeField] private SettingsTitle _settingsTitle = null;
     [SerializeField] private SettingsScenes _settingsScenes = null;
+    [SerializeField] private SettingsMenu _settingsMenu = null;
 
     public void Contruct()
     {

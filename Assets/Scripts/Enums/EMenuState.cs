@@ -1,18 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class EMenuState : MonoBehaviour
+public enum EMenuState
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    NONE = 0,
+    CATEGORIES = 1,
+    MODES = 2,
+    COURSES = 3,
 }
