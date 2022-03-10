@@ -226,6 +226,7 @@ MonoBehaviour:
     - {fileID: 727250175}
     - {fileID: 1440383537}
     - {fileID: 4111892}
+    - {fileID: 920599913}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -236,7 +237,7 @@ MonoBehaviour:
       Data: 0|System.Collections.Generic.List`1[[IManager, Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
-      Data: 5
+      Data: 6
     - Name: 
       Entry: 10
       Data: 0
@@ -252,6 +253,9 @@ MonoBehaviour:
     - Name: 
       Entry: 10
       Data: 4
+    - Name: 
+      Entry: 10
+      Data: 5
     - Name: 
       Entry: 13
       Data: 
@@ -555,9 +559,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a67b449848332174fb7ac32479bcb414, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentCategory: 1
-  _currentMode: 1
-  _currentCourse: 1
+  _currentCategory: 0
+  _currentMode: 0
+  _currentCourse: 0
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0

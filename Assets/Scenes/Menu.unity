@@ -275,7 +275,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -1413,6 +1413,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _currentState: 0
+  _currentCategory: 1
+  _currentMode: 1
+  _currentCourse: 1
 --- !u!1 &1869539327
 GameObject:
   m_ObjectHideFlags: 0

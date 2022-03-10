@@ -3,11 +3,13 @@ using UnityEngine;
 
 public class Menu : MonoBehaviour
 {
+    public static Action<EDirection> OnSceneFinishedEvent;
     public static Action OnStateChangedEvent;
 
+    [SerializeField] private bool _hasSceneFinished = false;
     [SerializeField] private EMenuState _currentState = EMenuState.NONE;
-    [SerializeField] private EMenuCategory _currentCategory = EMenuCategory.ENERGIA;
-    [SerializeField] private EMenuMode _currentMode = EMenuMode.RANDOM;
+    [SerializeField] private EMenuCategory _currentCategory = EMenuCategory.NONE;
+    [SerializeField] private EMenuMode _currentMode = EMenuMode.NONE;
     [SerializeField] private EMenuCourse _currentCourse = EMenuCourse.NONE;
     private SettingsMenu _settingsMenu = null;
 
@@ -69,6 +71,11 @@ public class Menu : MonoBehaviour
         }
         _currentState = state;
         OnStateChangedEvent?.Invoke();
+        if(!_hasSceneFinished && state == EMenuState.GAMEPLAY)
+        {
+            _hasSceneFinished = true;
+            OnSceneFinishedEvent(EDirection.NEXT);
+        }
     }
 
     private void SelectData(EDirection direction)
