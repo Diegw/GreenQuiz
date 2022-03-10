@@ -9,7 +9,7 @@ public class Splash : MonoBehaviour
     public static Action<EDirection> OnSceneFinishedEvent;
 
     [SerializeField] private Image _background = null;
-    [SerializeField] private bool _isReady = false;
+    [SerializeField] private bool _hasSceneFinished = false;
     private SettingsSplash _settingsSplash = null;
     private bool _isExecutionReady = false;
     private bool _isSplashReady = false;
@@ -79,7 +79,7 @@ public class Splash : MonoBehaviour
 
     private void TryToContinue()
     {
-        if(!IsReady())
+        if(!IsReady() || _hasSceneFinished)
         {
             return;
         }
@@ -92,6 +92,7 @@ public class Splash : MonoBehaviour
         {
             return false;
         }
+        _hasSceneFinished = true;
         return true;
     }
 }

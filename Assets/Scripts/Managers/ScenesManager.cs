@@ -10,7 +10,6 @@ public class ScenesManager : MonoBehaviour, IManager
 
     [TabGroup("DEBUG"), SerializeField] private string _currentSceneName = "";
     [TabGroup("DEBUG"), SerializeField] private EScene _currentSceneType = EScene.NONE;
-    private ScenesManager _instance = null;
     private SettingsScenes _settingsScenes = null;
 
     public void Contruct()

@@ -10,7 +10,7 @@ public class Title : MonoBehaviourCustom
     [SerializeField] private Image _logo = null;
     [SerializeField] private ButtonCustom _continueButton = null;
     private SettingsTitle _settingsTitle = null;
-    private bool _wasPressed = false;
+    private bool _hasSceneFinished = false;
 
     private void Awake()
     {
@@ -58,8 +58,11 @@ public class Title : MonoBehaviourCustom
 
     private void Continue()
     {
-        _wasPressed = true;
+        if(_hasSceneFinished)
+        {
+            return;
+        }
+        _hasSceneFinished = true;
         OnSceneFinishedEvent?.Invoke(EDirection.NEXT);
-        _wasPressed = false;
     }
 }
