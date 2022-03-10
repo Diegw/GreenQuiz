@@ -4,4 +4,5 @@ public enum EMenuState
     CATEGORIES = 1,
     MODES = 2,
     COURSES = 3,
+    GAMEPLAY = 4,
 }
