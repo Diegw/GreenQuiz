@@ -26,10 +26,11 @@ public class ScenesManager : MonoBehaviour, IManager
     {
         SceneManager.sceneUnloaded += OnSceneUnloaded;
         SceneManager.sceneLoaded += OnSceneLoaded;
+
         Splash.OnSceneFinishedEvent += LoadScene;
         Title.OnSceneFinishedEvent += LoadScene;
         Menu.OnSceneFinishedEvent += LoadScene;
-        // Results.OnSceneFinishedEvent += LoadScene;
+        Results.OnSceneFinishedEvent += LoadScene;
         // Options.OnExitMatchEvent += LoadScene;
         // Options.OnExitGameEvent += ExitApplication;
         // Gameplay.OnRestartEvent += LoadScene;
@@ -41,10 +42,11 @@ public class ScenesManager : MonoBehaviour, IManager
     {
         SceneManager.sceneUnloaded -= OnSceneUnloaded;
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        
         Splash.OnSceneFinishedEvent -= LoadScene;
         Title.OnSceneFinishedEvent -= LoadScene;
         Menu.OnSceneFinishedEvent -= LoadScene;
-        // Results.OnSceneFinishedEvent -= LoadScene;
+        Results.OnSceneFinishedEvent -= LoadScene;
         // Options.OnExitMatchEvent -= LoadScene;
         // Options.OnExitGameEvent -= ExitApplication;
         // Gameplay.OnRestartEvent -= LoadScene;

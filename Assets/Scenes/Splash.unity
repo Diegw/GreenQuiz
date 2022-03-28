@@ -745,7 +745,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _background: {fileID: 498642683}
-  _isReady: 0
+  _hasSceneFinished: 0
 --- !u!1 &1440383536
 GameObject:
   m_ObjectHideFlags: 0
@@ -779,6 +779,7 @@ MonoBehaviour:
   _settingsTitle: {fileID: 11400000, guid: 64dd2f20c0e407a42ad182f9d7cea4b4, type: 2}
   _settingsScenes: {fileID: 11400000, guid: 35c088cf786c3ef46b03f8de3ef7abda, type: 2}
   _settingsMenu: {fileID: 11400000, guid: 1be32550f94bef04a8374f1097f9c0ee, type: 2}
+  _settingsQuestion: {fileID: 11400000, guid: c949b6dd39075894fbfb0c1012043970, type: 2}
 --- !u!4 &1440383538
 Transform:
   m_ObjectHideFlags: 0

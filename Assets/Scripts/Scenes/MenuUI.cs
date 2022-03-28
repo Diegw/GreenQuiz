@@ -53,4 +53,9 @@ public class MenuUI : MonoBehaviour
     {
         OnButtonPressedEvent?.Invoke(buttonType);
     }
+
+    public void aaafffrfr()
+    {
+        Debug.Log(11111111111);
+    }
 }

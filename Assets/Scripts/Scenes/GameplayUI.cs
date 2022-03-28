@@ -9,6 +9,7 @@ public class GameplayUI : MonoBehaviour
 {
     public static Action<int> OnChoicePressedEvent;
 
+    [TabGroup("REFERENCES"), SerializeField] private RectTransform _UI = null;
     [TabGroup("REFERENCES"), SerializeField] private TMP_Text _timerDisplay = null;
     [TabGroup("REFERENCES"), SerializeField] private Image[] _timerImages = null;
     [Title("Question")]
@@ -17,9 +18,16 @@ public class GameplayUI : MonoBehaviour
     [TabGroup("REFERENCES"), SerializeField] private TMP_Text _questionDescription = null;
     [TabGroup("REFERENCES"), SerializeField] private List<ButtonCustom> _choiceButtons = new List<ButtonCustom>();
 
+    private void Awake()
+    {
+        ToggleGameplayUI(true);
+    }
+
     private void OnEnable()
     {
         Gameplay.OnTimerChangedEvent += UpdateTimerUI;
+        Gameplay.OnQuestionChangedEvent += UpdateQuestionUI;
+        Gameplay.OnMatchEndedEvent += delegate{ToggleGameplayUI(false);};
         if(IsThereNullReference())
         {
             return;
@@ -34,6 +42,8 @@ public class GameplayUI : MonoBehaviour
     private void OnDisable()
     {
         Gameplay.OnTimerChangedEvent -= UpdateTimerUI;
+        Gameplay.OnQuestionChangedEvent -= UpdateQuestionUI;
+        Gameplay.OnMatchEndedEvent -= delegate{ToggleGameplayUI(false);};
         if(IsThereNullReference())
         {
             return;
@@ -59,6 +69,38 @@ public class GameplayUI : MonoBehaviour
         }
     }
 
+    private void UpdateQuestionUI(int questionsAnswer, int totalQuestions, Question question)
+    {
+        if(IsThereNullReference() || question == null)
+        {
+            return;
+        }
+        // _categoryImage.sprite = _settingsQuestion.GetCategorySprite(GameManager.Category);
+        _questionNumber.text = $"Pregunta {questionsAnswer+1}/{totalQuestions}";
+        _questionDescription.text = question.Description;
+        for (int i = 0; i < _choiceButtons.Count; i++)
+        {
+            if(i < question.Choices.Count)
+            {
+                _choiceButtons[i].Display.text = question.Choices[i].Description;
+            }
+        }
+    }
+    
+    private void SendChoice(int choiceIndex)
+    {
+        OnChoicePressedEvent?.Invoke(choiceIndex);
+    }
+
+    private void ToggleGameplayUI(bool stateToSet)
+    {
+        if(_UI == null || _UI.gameObject.activeSelf == stateToSet)
+        {
+            return;
+        }
+        _UI.gameObject.SetActive(stateToSet);
+    }
+
     private bool IsThereNullReference()
     {
         if(_timerDisplay == null || _questionNumber == null || _questionDescription == null)
@@ -77,10 +119,5 @@ public class GameplayUI : MonoBehaviour
             return true;
         }
         return false;
-    }
-
-    private void SendChoice(int choiceIndex)
-    {
-        OnChoicePressedEvent?.Invoke(choiceIndex);
     }
 }

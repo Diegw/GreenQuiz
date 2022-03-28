@@ -83,6 +83,7 @@ public class Splash : MonoBehaviour
         {
             return;
         }
+        _hasSceneFinished = true;
         OnSceneFinishedEvent?.Invoke(EDirection.NEXT);
     }
 
@@ -92,7 +93,6 @@ public class Splash : MonoBehaviour
         {
             return false;
         }
-        _hasSceneFinished = true;
         return true;
     }
 }

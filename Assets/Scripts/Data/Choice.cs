@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
-[Serializable] public class Choice : MonoBehaviour
+[Serializable] public class Choice
 {
     public Choice(){}
     public Choice(Choice choice = null)
