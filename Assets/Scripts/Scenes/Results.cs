@@ -21,12 +21,14 @@ public class Results : SerializedMonoBehaviour
     {
         Gameplay.OnChoiceSelectedEvent += UpdateResults;
         Gameplay.OnMatchEndedEvent += PrepareResults;
+        ResultsUI.OnContinueButtonPressedEvent += Continue;
     }
 
     private void OnDisable()
     {
         Gameplay.OnChoiceSelectedEvent -= UpdateResults;
         Gameplay.OnMatchEndedEvent -= PrepareResults;
+        ResultsUI.OnContinueButtonPressedEvent -= Continue;
     }
 
     private void UpdateResults(Question question, Choice choice)

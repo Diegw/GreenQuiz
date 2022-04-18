@@ -5,6 +5,9 @@ using Sirenix.OdinInspector;
 public class SettingsMenu : SerializedScriptableObject
 {
     [SerializeField] private Dictionary<EMenuState, MenuState> states = new Dictionary<EMenuState, MenuState>();
+    [SerializeField] private Dictionary<EMenuCategory, MenuStateUI> _categories = new Dictionary<EMenuCategory, MenuStateUI>();
+    [SerializeField] private Dictionary<EMenuMode, MenuStateUI> _modes = new Dictionary<EMenuMode, MenuStateUI>();
+    [SerializeField] private Dictionary<EMenuCourse, MenuStateUI> _courses = new Dictionary<EMenuCourse, MenuStateUI>();
 
     private class MenuState
     {
@@ -13,6 +16,17 @@ public class SettingsMenu : SerializedScriptableObject
 
         public EMenuState PreviousState => _previousState;
         public EMenuState NextState => _nextState;
+    }
+
+    public MenuStateUI GetCategoryUI(EMenuCategory categoryType)
+    {
+        MenuStateUI category = null;
+        if(_categories == null || !_categories.ContainsKey(categoryType))
+        {
+            return category;
+        }
+        category = _categories[categoryType];
+        return category;
     }
 
     public EMenuState NewState(EMenuState currentState, EDirection direction)
@@ -42,4 +56,10 @@ public class SettingsMenu : SerializedScriptableObject
         }
         return newState;
     }
+}
+
+public class MenuStateUI
+{
+    [SerializeField] private string _name;
+    [SerializeField] private Sprite _image;
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 public class Menu : MonoBehaviour
 {
     public static Action<EDirection> OnSceneFinishedEvent;
-    public static Action OnStateChangedEvent;
+    public static Action<EMenuState> OnStateChangedEvent;
 
     [SerializeField] private bool _hasSceneFinished = false;
     [SerializeField] private EMenuState _currentState = EMenuState.NONE;
@@ -13,16 +13,6 @@ public class Menu : MonoBehaviour
     [SerializeField] private EMenuCourse _currentCourse = EMenuCourse.NONE;
     private SettingsMenu _settingsMenu = null;
 
-    private void Awake()
-    {
-        _settingsMenu = SettingsManager.Menu;
-        if(_settingsMenu == null)
-        {
-            Debug.LogError("Settings Menu is null");
-            return;
-        }
-        SelectState(EDirection.NEXT);
-    }
 
     private void OnEnable()
     {
@@ -34,6 +24,17 @@ public class Menu : MonoBehaviour
         MenuUI.OnButtonPressedEvent -= CheckToChangeState;
     }
 
+    private void Start()
+    {
+        _settingsMenu = SettingsManager.Menu;
+        if(_settingsMenu == null)
+        {
+            Debug.LogError("Settings Menu is null");
+            return;
+        }
+        SelectState(EDirection.NEXT);
+    }
+    
     private void CheckToChangeState(EButtonType buttonType)
     {
         if(_settingsMenu == null)
@@ -70,7 +71,7 @@ public class Menu : MonoBehaviour
             return;
         }
         _currentState = state;
-        OnStateChangedEvent?.Invoke();
+        OnStateChangedEvent?.Invoke(_currentState);
         if(!_hasSceneFinished && state == EMenuState.GAMEPLAY)
         {
             _hasSceneFinished = true;

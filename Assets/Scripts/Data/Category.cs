@@ -19,11 +19,13 @@ using Sirenix.OdinInspector;
     public int ID => _ID;
     public EMenuCategory CategoryType => _categoryType;
     public string Name => _name;
+    public Sprite Image => _image;
     public List<CourseData> CoursesData => _courses;
 
     [SerializeField, DisplayAsString] private int _ID = -1;
     [SerializeField, OnValueChanged(nameof(SetID))] private EMenuCategory _categoryType = EMenuCategory.NONE;
     [SerializeField] private string _name = "Category";
+    [SerializeField] private Sprite _image = null;
     [SerializeField] private List<CourseData> _courses = new List<CourseData>();
 
     private void SetID()

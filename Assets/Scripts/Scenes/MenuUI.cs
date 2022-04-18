@@ -8,15 +8,27 @@ public class MenuUI : MonoBehaviour
 
     [SerializeField] private ButtonCustom _backButton = null;
     [SerializeField] private ButtonCustom _continueButton = null;
+    private SettingsMenu _menuSettings = null;
+
+    private void Awake()
+    {
+        _menuSettings = SettingsManager.Menu;
+        if(_menuSettings == null)
+        {
+            Debug.LogError("Menu Settings is null");
+        }
+    }
 
     private void OnEnable()
     {
+        Menu.OnStateChangedEvent += SetUI;
         AddButtonListener(_backButton, BackButton);
         AddButtonListener(_continueButton, ContinueButton);
     }
 
     private void OnDisable()
     {
+        Menu.OnStateChangedEvent -= SetUI;
         RemoveButtonListener(_backButton, BackButton);
         RemoveButtonListener(_continueButton, ContinueButton);
     }
@@ -39,6 +51,23 @@ public class MenuUI : MonoBehaviour
         buttonCustom.Button.onClick.RemoveListener(action);
     }
 
+    private void SetUI(EMenuState state)
+    {
+        switch (state)
+        {
+            case EMenuState.CATEGORIES:
+            {
+                MenuStateUI categoryUI = _menuSettings.GetCategoryUI(GameManager.Category);
+                if(categoryUI != null)
+                {
+                    
+                }
+                break;
+            }
+        }
+        //buscar settings del state
+    }
+
     private void BackButton()
     {
         ButtonPressed(EButtonType.BACK);
@@ -52,10 +81,5 @@ public class MenuUI : MonoBehaviour
     private void ButtonPressed(EButtonType buttonType)
     {
         OnButtonPressedEvent?.Invoke(buttonType);
-    }
-
-    public void aaafffrfr()
-    {
-        Debug.Log(11111111111);
     }
 }

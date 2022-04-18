@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
-[CreateAssetMenu]
+
 public class SettingsQuestion : SerializedScriptableObject
 {
     public float TimePerQuestion => _timePerQuestion;
     public int QuestionsPerMatch => _questionsPerMatch;
 
     private bool _isUpdating = false;
-    [SerializeField, Button("Update Question IDs")] private void UpdateIDs()
+    [SerializeField, Button("Update Questions ID")] private void UpdateIDs()
     {
         if(_categories == null || _isUpdating)
         {
