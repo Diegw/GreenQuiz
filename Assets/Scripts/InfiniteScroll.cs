@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -6,16 +5,17 @@ using System.Collections.Generic;
 
 public class InfiniteScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    [SerializeField] private RectTransform itemPrefab;
     [SerializeField] private Canvas canvas;
     [SerializeField] private RectTransform itemsHolder;
     [SerializeField] private float itemSpacing;
     [SerializeField] private bool horizontal, vertical;
     [SerializeField] private float hideThreshold;
     [SerializeField] private float startOffset;
+    private List<RectTransform> itemsInsideHolder = new List<RectTransform>();
     private ScrollRect scrollRect;
     private Vector2 lastDragPosition;
     private bool positiveDrag;
-    private RectTransform[] childItemsHolder;
     private float initialWidth, initialHeight;
     private float childWidth, childHeight;
     private GraphicRaycaster graphicRaycaster;
@@ -36,6 +36,7 @@ public class InfiniteScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         {
             scrollRect.onValueChanged.AddListener(HandleScroll);
         }
+        // MenuUI.OnSetCategoriesUIEvent += Initialize;
     }
 
     private void OnDisable()
@@ -44,36 +45,32 @@ public class InfiniteScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         {
             scrollRect.onValueChanged.RemoveListener(HandleScroll);
         }
+        // MenuUI.OnSetCategoriesUIEvent -= Initialize;
     }
 
-    private void Start()
+    public void Initialize()
     {
-        InitialSetup();
         scrollRect.vertical = vertical;
         scrollRect.horizontal = horizontal;
         scrollRect.movementType = ScrollRect.MovementType.Unrestricted;
-    }
 
-    private void InitialSetup()
-    {
         if(itemsHolder == null || itemsHolder.childCount <= 0)
         {
             return;
         }
-        childItemsHolder = new RectTransform[itemsHolder.childCount];
-
-        for (int i = 0; i < itemsHolder.childCount; i++)
-        {
-            childItemsHolder[i] = itemsHolder.GetChild(i) as RectTransform;
-        }
+        // RectTransform[] itemsInsideHolder = InstantiateItems(categories.Count);
+        // for (int i = 0; i < itemsHolder.childCount; i++)
+        // {
+        //     itemsInsideHolder[i] = itemsHolder.GetChild(i) as RectTransform;
+        // }
 
         initialWidth = itemsHolder.rect.width;
         initialHeight = itemsHolder.rect.height;
 
-        if(childItemsHolder != null || childItemsHolder.Length > 0)
+        if(itemsInsideHolder != null || itemsInsideHolder.Count > 0)
         {
-            childWidth = childItemsHolder[0].rect.width;
-            childHeight = childItemsHolder[0].rect.height;
+            childWidth = itemsInsideHolder[0].rect.width;
+            childHeight = itemsInsideHolder[0].rect.height;
         }
 
         horizontal = !vertical;
@@ -87,11 +84,59 @@ public class InfiniteScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         }
     }
 
+    public void InstantiateItems(int quantity)
+    {
+        if(itemsInsideHolder == null)
+        {
+            itemsInsideHolder = new List<RectTransform>();
+        }
+
+        int quantityLeft = quantity - itemsInsideHolder.Count;
+        if(quantityLeft == 0)
+        {
+            return;
+        }
+
+        if(quantityLeft < 0)
+        {
+            for (int i = Mathf.Abs(quantityLeft) - 1; i >= 0 ; i--)
+            {
+                RectTransform rectTransform = itemsInsideHolder[i];
+                itemsInsideHolder.Remove(rectTransform);
+                Destroy(rectTransform.gameObject);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < quantityLeft; i++)
+            {
+                itemsInsideHolder.Add(Instantiate(itemPrefab, Vector2.zero, Quaternion.identity, itemsHolder.transform));
+            }
+        }
+    }
+
+    public void SetItemsSprites(Sprite[] sprites)
+    {
+        if(sprites.Length != itemsInsideHolder.Count)
+        {
+            Debug.LogError($"Trying to assing {sprites.Length} sprites into {itemsInsideHolder.Count} items");
+            return;
+        }
+        for (int i = 0; i < itemsInsideHolder.Count; i++)
+        {
+            Image image = itemsInsideHolder[i].GetComponent<Image>();
+            if(image)
+            {
+                image.sprite = sprites[i];       
+            }
+        }
+    }
+
     private void InitializeContentHorizontal()
     {
         float initialX = 0 - (initialWidth * 0.5f);
         float positionOffset = childWidth * 0.5f;
-        for (int i = 0; i < childItemsHolder.Length; i++)
+        for (int i = 0; i < itemsInsideHolder.Count; i++)
         {
             Vector2 childPos = Vector2.zero;
             if(i == 0)
@@ -102,7 +147,7 @@ public class InfiniteScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             {
                 childPos.x += ((i - 1) * (childWidth + itemSpacing));
             }
-            childItemsHolder[i].localPosition = childPos;
+            itemsInsideHolder[i].localPosition = childPos;
             // Vector2 childPos = childItemsHolder[i].localPosition;
             // childPos.x = initialX + positionOffset + i * (childWidth + itemSpacing) - startOffset;
             // childItemsHolder[i].localPosition = childPos;
@@ -113,11 +158,11 @@ public class InfiniteScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     {
         float initialY = 0 - (initialHeight * 0.5f);
         float positionOffset = childHeight * 0.5f;
-        for (int i = 0; i < childItemsHolder.Length; i++)
+        for (int i = 0; i < itemsInsideHolder.Count; i++)
         {
-            Vector2 childPos = childItemsHolder[i].localPosition;
+            Vector2 childPos = itemsInsideHolder[i].localPosition;
             childPos.y = initialY + positionOffset + i * (childHeight + itemSpacing);
-            childItemsHolder[i].localPosition = childPos;
+            itemsInsideHolder[i].localPosition = childPos;
         }
     }
 

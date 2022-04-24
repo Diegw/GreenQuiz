@@ -4,11 +4,12 @@ using Sirenix.OdinInspector;
 
 public class SettingsMenu : SerializedScriptableObject
 {
+    public Dictionary<EMenuCategory, MenuStateUI> Categories => _categories;
     [SerializeField] private Dictionary<EMenuState, MenuState> states = new Dictionary<EMenuState, MenuState>();
     [SerializeField] private Dictionary<EMenuCategory, MenuStateUI> _categories = new Dictionary<EMenuCategory, MenuStateUI>();
     [SerializeField] private Dictionary<EMenuMode, MenuStateUI> _modes = new Dictionary<EMenuMode, MenuStateUI>();
     [SerializeField] private Dictionary<EMenuCourse, MenuStateUI> _courses = new Dictionary<EMenuCourse, MenuStateUI>();
-
+    
     private class MenuState
     {
         [SerializeField] private EMenuState _previousState;
@@ -18,15 +19,27 @@ public class SettingsMenu : SerializedScriptableObject
         public EMenuState NextState => _nextState;
     }
 
-    public MenuStateUI GetCategoryUI(EMenuCategory categoryType)
+    public Sprite[] GetCategoriesSprites()
     {
-        MenuStateUI category = null;
+        Sprite[] sprites = new Sprite[_categories.Count];
+        int index = 0;
+        foreach (var category in _categories.Values)
+        {
+            sprites[index] = category.Image;
+            index++;
+        }
+        return sprites;
+    }
+
+    public string GetCategoryName(EMenuCategory categoryType)
+    {
+        string categoryName = null;
         if(_categories == null || !_categories.ContainsKey(categoryType))
         {
-            return category;
+            return categoryName;
         }
-        category = _categories[categoryType];
-        return category;
+        categoryName = _categories[categoryType].Name;
+        return categoryName;
     }
 
     public EMenuState NewState(EMenuState currentState, EDirection direction)
@@ -60,6 +73,9 @@ public class SettingsMenu : SerializedScriptableObject
 
 public class MenuStateUI
 {
+    public string Name => _name;
+    public Sprite Image => _image;
+
     [SerializeField] private string _name;
     [SerializeField] private Sprite _image;
 }

@@ -1,18 +1,25 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using TMPro;
 
 public class MenuUI : MonoBehaviour
 {
     public static Action<EButtonType> OnButtonPressedEvent;
+    public static Action<Dictionary<EMenuCategory, MenuStateUI>> OnSetCategoriesUIEvent;
 
+    [SerializeField] private TMP_Text _itemTitle = null;
     [SerializeField] private ButtonCustom _backButton = null;
     [SerializeField] private ButtonCustom _continueButton = null;
     private SettingsMenu _menuSettings = null;
+    private EMenuState _lastMenuState = EMenuState.NONE;
+    private InfiniteScroll _infiniteScroll = null;
 
     private void Awake()
     {
         _menuSettings = SettingsManager.Menu;
+        _infiniteScroll = GetComponentInChildren<InfiniteScroll>();
         if(_menuSettings == null)
         {
             Debug.LogError("Menu Settings is null");
@@ -51,21 +58,30 @@ public class MenuUI : MonoBehaviour
         buttonCustom.Button.onClick.RemoveListener(action);
     }
 
-    private void SetUI(EMenuState state)
+    private void SetUI(EMenuState state, bool isFirstState)
     {
+        if(!isFirstState || _menuSettings == null)
+        {
+            return;
+        }
+        if(_lastMenuState == state)
+        {
+            return;
+        }
+        _lastMenuState = state;
+
         switch (state)
         {
             case EMenuState.CATEGORIES:
             {
-                MenuStateUI categoryUI = _menuSettings.GetCategoryUI(GameManager.Category);
-                if(categoryUI != null)
-                {
-                    
-                }
+                _itemTitle.text = _menuSettings.GetCategoryName(GameManager.Category);
+                _infiniteScroll.InstantiateItems(_menuSettings.Categories.Count);
+                _infiniteScroll.SetItemsSprites(_menuSettings.GetCategoriesSprites());
+                _infiniteScroll.Initialize();
+                // OnSetCategoriesUIEvent?.Invoke(_menuSettings.Categories);
                 break;
             }
         }
-        //buscar settings del state
     }
 
     private void BackButton()

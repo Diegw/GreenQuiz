@@ -4,7 +4,7 @@ using UnityEngine;
 public class Menu : MonoBehaviour
 {
     public static Action<EDirection> OnSceneFinishedEvent;
-    public static Action<EMenuState> OnStateChangedEvent;
+    public static Action<EMenuState, bool> OnStateChangedEvent;
 
     [SerializeField] private bool _hasSceneFinished = false;
     [SerializeField] private EMenuState _currentState = EMenuState.NONE;
@@ -32,7 +32,7 @@ public class Menu : MonoBehaviour
             Debug.LogError("Settings Menu is null");
             return;
         }
-        SelectState(EDirection.NEXT);
+        SelectState(EDirection.NEXT, true);
     }
     
     private void CheckToChangeState(EButtonType buttonType)
@@ -58,7 +58,7 @@ public class Menu : MonoBehaviour
         SelectState(direction);
     }
 
-    private void SelectState(EDirection direction)
+    private void SelectState(EDirection direction, bool isFirstState = false)
     {
         if(_settingsMenu == null)
         {
@@ -71,7 +71,7 @@ public class Menu : MonoBehaviour
             return;
         }
         _currentState = state;
-        OnStateChangedEvent?.Invoke(_currentState);
+        OnStateChangedEvent?.Invoke(_currentState, isFirstState);
         if(!_hasSceneFinished && state == EMenuState.GAMEPLAY)
         {
             _hasSceneFinished = true;
