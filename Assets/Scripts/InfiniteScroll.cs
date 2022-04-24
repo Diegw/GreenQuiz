@@ -126,53 +126,58 @@ public class InfiniteScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         lastDragPosition = eventData.position;
     }
 
-    public Vector3 vectorcito;
-
     public void OnEndDrag(PointerEventData eventData)
     {
-        Image imageHit = RaycastToHitImage();
-        if(imageHit == null)
-        {
-            return;
-        }
+        AdjustImages();
+        HandleScroll(itemsHolder.position);
     }
 
-    private Image RaycastToHitImage(EDirection side = EDirection.NONE)
+    private Image GetImageFromRaycast(EDirection side = EDirection.NONE)
     {
-        Image imageHit = null;
-        if (InputManager.EventSystem == null || graphicRaycaster == null)
+        Image image = null;
+        if (InputManager.EventSystem != null && graphicRaycaster != null)
         {
-            return imageHit;
-        }
-        pointerEventData = new PointerEventData(InputManager.EventSystem);
-        float positionX = (Screen.width / 2) - ((itemSpacing + 5) * (int)side);
-        pointerEventData.position = new Vector3(positionX, Screen.height / 2, 0);
-        List<RaycastResult> results = new List<RaycastResult>();
-        graphicRaycaster.Raycast(pointerEventData, results);
-        if (results.Count <= 0 || results.Count > 1)
-        {
-            List<Image> images = new List<Image>();
-            images.Add(RaycastToHitImage(EDirection.NEXT));
-            images.Add(RaycastToHitImage(EDirection.PREVIOUS));
-            if(images.Count == 2)
+            List<RaycastResult> results = new List<RaycastResult>();
+            float positionX = (Screen.width / 2) + ((itemSpacing + 5) * (int)side);
+            pointerEventData = new PointerEventData(InputManager.EventSystem);
+            pointerEventData.position = new Vector3(positionX, Screen.height / 2, 0);
+            graphicRaycaster.Raycast(pointerEventData, results);
+            if (results != null && results.Count == 1)
             {
-                float distanceLeftImage = (Screen.width / 2) - images[0].transform.position.x;
-                float distanceRightImage = images[1].transform.position.x - (Screen.width / 2);
-                if(distanceLeftImage < distanceRightImage)
+                image = results[0].gameObject.GetComponent<Image>();
+            }
+        }
+        return image;
+    }
+
+    private void AdjustImages()
+    {
+        Image imageHit = GetImageFromRaycast(EDirection.NONE);
+        Vector2 newImagesPosition = Vector2.zero;
+        if(imageHit == null)
+        {
+            Image rightImage = GetImageFromRaycast(EDirection.NEXT);
+            Image leftImage = GetImageFromRaycast(EDirection.PREVIOUS);
+            if(rightImage != null && leftImage != null)
+            {
+                float distanceLeftImage = (Screen.width / 2) - leftImage.transform.position.x;
+                float distanceRightImage = rightImage.transform.position.x - (Screen.width / 2);
+                if(distanceLeftImage > distanceRightImage)
                 {
-                    itemsHolder.anchoredPosition = new Vector2(itemsHolder.anchoredPosition.x + distanceLeftImage, itemsHolder.anchoredPosition.y);
-                    imageHit = images[0];
+                    newImagesPosition = new Vector2(itemsHolder.anchoredPosition.x - distanceRightImage, itemsHolder.anchoredPosition.y);
                 }
                 else
                 {
-                    itemsHolder.anchoredPosition = new Vector2(itemsHolder.anchoredPosition.x - distanceLeftImage, itemsHolder.anchoredPosition.y);
-                    imageHit = images[1];
+                    newImagesPosition = new Vector2(itemsHolder.anchoredPosition.x + distanceLeftImage, itemsHolder.anchoredPosition.y);
                 }
             }
-            return imageHit;
         }
-        imageHit = results[0].gameObject.GetComponent<Image>();
-        return imageHit;
+        else
+        {
+            float distance = (Screen.width / 2) - imageHit.transform.position.x;
+            newImagesPosition = new Vector2(itemsHolder.anchoredPosition.x + distance, itemsHolder.anchoredPosition.y);
+        }
+        itemsHolder.anchoredPosition = newImagesPosition;
     }
 
     public void OnDrag(PointerEventData eventData)
