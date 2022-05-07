@@ -8,7 +8,7 @@ public class Splash : MonoBehaviour
 {
     public static Action<EDirection> OnSceneFinishedEvent;
 
-    [SerializeField] private Image _background = null;
+    [SerializeField] private Image _logo = null;
     [SerializeField] private bool _hasSceneFinished = false;
     private SettingsSplash _settingsSplash = null;
     private bool _isExecutionReady = false;
@@ -48,21 +48,21 @@ public class Splash : MonoBehaviour
         {
             yield return Timing.WaitForOneFrame;
         }
-        SetBackground(_settingsSplash.DeveloperLogo);
-        yield return Timing.WaitForSeconds(_settingsSplash.DeveloperSeconds);
-        SetBackground(_settingsSplash.PublisherLogo);
-        yield return Timing.WaitForSeconds(_settingsSplash.PublisherSeconds);
+        SetLogo(_settingsSplash.GetDeveloperLogo());
+        yield return Timing.WaitForSeconds(_settingsSplash.GetDeveloperSeconds());
+        SetLogo(_settingsSplash.GetPublisherLogo());
+        yield return Timing.WaitForSeconds(_settingsSplash.GetPublisherSeconds());
         OnSplashReady();
     }
 
-    private void SetBackground(Sprite newSprite)
+    private void SetLogo(Sprite newSprite)
     {
-        if(_background == null)
+        if(_logo == null)
         {
-            Debug.LogError("Splash Background Image is null");
+            Debug.LogError("Splash - Logo Image is null");
             return;
         }
-        _background.sprite = newSprite;
+        _logo.sprite = newSprite;
     }
 
     private void OnExecutionReady()
@@ -83,8 +83,8 @@ public class Splash : MonoBehaviour
         {
             return;
         }
-        _hasSceneFinished = true;
-        OnSceneFinishedEvent?.Invoke(EDirection.NEXT);
+        // _hasSceneFinished = true;
+        // OnSceneFinishedEvent?.Invoke(EDirection.NEXT);
     }
 
     private bool IsReady()

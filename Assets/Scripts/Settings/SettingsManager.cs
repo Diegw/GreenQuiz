@@ -5,6 +5,17 @@ public class SettingsManager : MonoBehaviour, IManager
 {
     public static Action OnSetUpReadyEvent;
     
+    public static SettingsAssets Assets
+    {
+        get
+        {
+            if(_instance == null || _instance._settingsAssets == null)
+            {
+                return null;
+            }
+            return _instance._settingsAssets;
+        }
+    }
     public static SettingsSplash Splash
     {
         get
@@ -62,6 +73,7 @@ public class SettingsManager : MonoBehaviour, IManager
     }
 
     private static SettingsManager _instance = null;
+    [SerializeField] private SettingsAssets _settingsAssets = null;
     [SerializeField] private SettingsSplash _settingsSplash = null;
     [SerializeField] private SettingsTitle _settingsTitle = null;
     [SerializeField] private SettingsScenes _settingsScenes = null;
