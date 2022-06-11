@@ -4,19 +4,37 @@ using Sirenix.OdinInspector;
 
 public class SettingsMenu : SerializedScriptableObject
 {
-    public Dictionary<EMenuCategory, MenuStateUI> Categories => _categories;
-    [SerializeField] private Dictionary<EMenuState, MenuState> states = new Dictionary<EMenuState, MenuState>();
+    [SerializeField] private Dictionary<EMenuState, EMenuState> _nextStates = new Dictionary<EMenuState, EMenuState>();
+    [SerializeField] private Dictionary<EMenuState, string> _instructionsStates = new Dictionary<EMenuState, string>();
     [SerializeField] private Dictionary<EMenuCategory, MenuStateUI> _categories = new Dictionary<EMenuCategory, MenuStateUI>();
     [SerializeField] private Dictionary<EMenuMode, MenuStateUI> _modes = new Dictionary<EMenuMode, MenuStateUI>();
     [SerializeField] private Dictionary<EMenuCourse, MenuStateUI> _courses = new Dictionary<EMenuCourse, MenuStateUI>();
+    [SerializeField] private Dictionary<EMenuCategory, EMenuCourse[]> _coursesPerCategory = new Dictionary<EMenuCategory, EMenuCourse[]>();
     
-    private class MenuState
+    public EMenuState NewState(EMenuState currentState)
     {
-        [SerializeField] private EMenuState _previousState;
-        [SerializeField] private EMenuState _nextState;
+        EMenuState newMenuState = EMenuState.NONE;
+        if(_nextStates != null && _nextStates.ContainsKey(currentState))
+        {
+            newMenuState = _nextStates[currentState];;
+        }
+        return newMenuState;
+    }
 
-        public EMenuState PreviousState => _previousState;
-        public EMenuState NextState => _nextState;
+    public string GetStateInstructions(EMenuState state)
+    {
+        string instructions = "";
+        if(_instructionsStates != null && _instructionsStates.ContainsKey(state))
+        {
+            instructions = _instructionsStates[state];
+        }
+        return instructions;
+    }
+
+#region CATEGORIES
+    public int GetCategoriesCount()
+    {
+        return _categories.Count;
     }
 
     public Sprite[] GetCategoriesSprites()
@@ -33,7 +51,7 @@ public class SettingsMenu : SerializedScriptableObject
 
     public string GetCategoryName(EMenuCategory categoryType)
     {
-        string categoryName = null;
+        string categoryName = "";
         if(_categories == null || !_categories.ContainsKey(categoryType))
         {
             return categoryName;
@@ -41,34 +59,77 @@ public class SettingsMenu : SerializedScriptableObject
         categoryName = _categories[categoryType].Name;
         return categoryName;
     }
+#endregion
 
-    public EMenuState NewState(EMenuState currentState, EDirection direction)
+#region MODES
+    public int GetModesCount()
     {
-        EMenuState newMenuState = EMenuState.NONE;
-        if(states != null && states.ContainsKey(currentState))
-        {
-            newMenuState = SelectNewState(currentState, direction, states[currentState]);
-        }
-        return newMenuState;
+        return _modes.Count;
     }
 
-    private EMenuState SelectNewState(EMenuState currentState, EDirection direction, MenuState menuState)
+    public Sprite[] GetModesSprites()
     {
-        EMenuState newState = EMenuState.NONE;
-        if(direction == EDirection.PREVIOUS)
+        Sprite[] sprites = new Sprite[_modes.Count];
+        int index = 0;
+        foreach (var mode in _modes.Values)
         {
-            newState = menuState.PreviousState;
+            sprites[index] = mode.Image;
+            index++;
         }
-        else if (direction == EDirection.NEXT)
+        return sprites;
+    }
+
+    public string GetModeName(EMenuMode modeType)
+    {
+        string modeName = "";
+        if(_modes == null || !_modes.ContainsKey(modeType))
         {
-            newState = menuState.NextState;
-            if(currentState == EMenuState.MODES && GameManager.Mode == EMenuMode.RANDOM)
+            return modeName;
+        }
+        modeName = _modes[modeType].Name;
+        return modeName;
+    }
+#endregion
+
+#region COURSES
+    public string GetCourseName(EMenuCourse course)
+    {
+        string courseName = "";
+        return courseName;
+    }
+
+    public int GetCoursesCount(EMenuCategory category)
+    {
+        EMenuCourse[] courses = GetCategoryCourses(category);
+        return courses == null ? 0 : courses.Length;
+    }
+
+    public Sprite[] GetCoursesSprites(EMenuCategory category)
+    {
+        Sprite[] sprites = null;
+        EMenuCourse[] courses = GetCategoryCourses(category);
+        if(courses != null && _courses != null)
+        {
+            sprites = new Sprite[courses.Length];
+            for (int i = 0; i < courses.Length; i++)
             {
-                newState = EMenuState.GAMEPLAY;
+                sprites[i] = _courses[courses[i]].Image;
             }
         }
-        return newState;
+        return sprites;
     }
+
+    private EMenuCourse[] GetCategoryCourses(EMenuCategory category)
+    {
+        EMenuCourse[] courses = null;
+        if(_coursesPerCategory != null && _coursesPerCategory.ContainsKey(category))
+        {
+            courses = _coursesPerCategory[category];
+        }
+        return courses;
+    }
+#endregion
+
 }
 
 public class MenuStateUI

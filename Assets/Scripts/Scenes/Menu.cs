@@ -1,77 +1,78 @@
 using System;
 using UnityEngine;
+using TMPro;
+using UnityEngine.Events;
 
 public class Menu : MonoBehaviour
 {
     public static Action<EDirection> OnSceneFinishedEvent;
-    public static Action<EMenuState, bool> OnStateChangedEvent;
+    public static Action<EButtonType> OnButtonPressedEvent;
 
     [SerializeField] private bool _hasSceneFinished = false;
     [SerializeField] private EMenuState _currentState = EMenuState.NONE;
     [SerializeField] private EMenuCategory _currentCategory = EMenuCategory.NONE;
     [SerializeField] private EMenuMode _currentMode = EMenuMode.NONE;
     [SerializeField] private EMenuCourse _currentCourse = EMenuCourse.NONE;
-    private SettingsMenu _settingsMenu = null;
+    [Header("UI")]
+    [SerializeField] private TMP_Text _instructionsDisplay = null;
+    [SerializeField] private TMP_Text _itemDisplay = null;
+    [SerializeField] private ButtonCustom _continueButton = null;
+    [SerializeField] private InfiniteScroll _infiniteScroll = null;
+    private SettingsMenu _menuSettings = null;
 
-
-    private void OnEnable()
+    private void Awake()
     {
-        MenuUI.OnButtonPressedEvent += CheckToChangeState;
-    }
-
-    private void OnDisable()
-    {
-        MenuUI.OnButtonPressedEvent -= CheckToChangeState;
-    }
-
-    private void Start()
-    {
-        _settingsMenu = SettingsManager.Menu;
-        if(_settingsMenu == null)
+        _menuSettings = SettingsManager.Menu;
+        if(_menuSettings == null)
         {
             Debug.LogError("Settings Menu is null");
             return;
         }
-        SelectState(EDirection.NEXT, true);
-    }
-    
-    private void CheckToChangeState(EButtonType buttonType)
-    {
-        if(_settingsMenu == null)
-        {
-            return;
-        }
-        EDirection direction = EDirection.NONE;
-        switch (buttonType)
-        {
-            case EButtonType.BACK:
-            {
-                direction = EDirection.PREVIOUS;
-                break;
-            }
-            case EButtonType.CONTINUE:
-            {
-                direction = EDirection.NEXT;
-                break;
-            }
-        }
-        SelectState(direction);
+        SelectNextState();
     }
 
-    private void SelectState(EDirection direction, bool isFirstState = false)
+    private void OnEnable()
     {
-        if(_settingsMenu == null)
+        AddButtonListener(_continueButton, SelectNextState);
+    }
+
+    private void OnDisable()
+    {
+        RemoveButtonListener(_continueButton, SelectNextState);
+    }
+    
+    private void AddButtonListener(ButtonCustom buttonCustom, UnityAction action)
+    {
+        if(buttonCustom == null || buttonCustom.Button == null)
         {
             return;
         }
-        SelectData(direction);
-        EMenuState state = _settingsMenu.NewState(_currentState, direction);
+        buttonCustom.Button.onClick.AddListener(action);
+    }
+
+    private void RemoveButtonListener(ButtonCustom buttonCustom, UnityAction action)
+    {
+        if(buttonCustom == null || buttonCustom.Button == null)
+        {
+            return;
+        }
+        buttonCustom.Button.onClick.RemoveListener(action);
+    }
+
+    private void SelectNextState()
+    {
+        if(_menuSettings == null)
+        {
+            return;
+        }
+        SelectData();
+        EMenuState state = _menuSettings.NewState(_currentState);
         if(state == _currentState)
         {
             return;
         }
         _currentState = state;
-        OnStateChangedEvent?.Invoke(_currentState, isFirstState);
+        SetUI();
         if(!_hasSceneFinished && state == EMenuState.GAMEPLAY)
         {
             _hasSceneFinished = true;
@@ -79,10 +80,82 @@ public class Menu : MonoBehaviour
         }
     }
 
-    private void SelectData(EDirection direction)
+    private void SelectData()
     {
         GameManager.SetCategory(_currentCategory);
         GameManager.SetGameMode(_currentMode);
         GameManager.SetCourse(_currentCourse);
+    }
+
+    private void SetUI()
+    {
+        if(_menuSettings == null)
+        {
+            return;
+        }
+        EMenuState actualState = _currentState;
+        if(_instructionsDisplay != null)
+        {
+            _instructionsDisplay.text = _menuSettings.GetStateInstructions(actualState);
+        }
+        switch (actualState)
+        {
+            case EMenuState.CATEGORIES:
+            {
+                _itemDisplay.text = _menuSettings.GetCategoryName(GameManager.Category);
+                _infiniteScroll.InstantiateItems(_menuSettings.GetCategoriesCount());
+                _infiniteScroll.SetItemsSprites(_menuSettings.GetCategoriesSprites());
+                _infiniteScroll.Initialize();
+                break;
+            }
+            case EMenuState.MODES:
+            {
+                _itemDisplay.text = _menuSettings.GetModeName(GameManager.Mode);
+                _infiniteScroll.InstantiateItems(_menuSettings.GetModesCount());
+                _infiniteScroll.SetItemsSprites(_menuSettings.GetModesSprites());
+                _infiniteScroll.Initialize();
+                break;
+            }
+            case EMenuState.COURSES:
+            {
+                _itemDisplay.text = _menuSettings.GetCourseName(GameManager.Course);
+                _infiniteScroll.InstantiateItems(_menuSettings.GetCoursesCount(GameManager.Category));
+                _infiniteScroll.SetItemsSprites(_menuSettings.GetCoursesSprites(GameManager.Category));
+                _infiniteScroll.Initialize();
+                break;
+            }
+        }
+    }
+
+    private string GetStateItemName(EMenuState state)
+    {
+        string stateItemName = "";
+        if(_menuSettings != null)
+        {
+            switch (state)
+            {
+                case EMenuState.CATEGORIES:
+                {
+                    stateItemName = _menuSettings.GetCategoryName(GameManager.Category);
+                    break;
+                }
+                case EMenuState.MODES:
+                {
+                    stateItemName = _menuSettings.GetModeName(GameManager.Mode);
+                    break;
+                }
+                case EMenuState.COURSES:
+                {
+                    stateItemName = _menuSettings.GetCourseName(GameManager.Course);
+                    break;
+                }
+            }
+        }
+        return stateItemName;
+    }
+
+    private void ContinueButton()
+    {
+        OnButtonPressedEvent?.Invoke(EButtonType.CONTINUE);
     }
 }

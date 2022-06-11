@@ -6,7 +6,6 @@ public class Title : MonoBehaviourCustom
 {
     public static Action<EDirection> OnSceneFinishedEvent;
 
-    [SerializeField] private Image _background = null;
     [SerializeField] private Image _logo = null;
     [SerializeField] private ButtonCustom _continueButton = null;
     private SettingsTitle _settingsTitle = null;
@@ -14,7 +13,7 @@ public class Title : MonoBehaviourCustom
 
     private void Awake()
     {
-        if(AreThereNullReferences(_background, _logo, _continueButton))
+        if(AreThereNullReferences(_logo, _continueButton))
         {
             return;
         }
@@ -29,13 +28,6 @@ public class Title : MonoBehaviourCustom
             Debug.LogError("Title settings is null");
             return;
         }
-        
-        if(_background == null || _logo == null)
-        {
-            return;
-        }
-        _background.sprite = _settingsTitle.BackgroundSprite.Sprite;
-        _background.color = _settingsTitle.BackgroundSprite.Color;
 
         _logo.sprite = _settingsTitle.LogoSprite.Sprite;
         _logo.color = _settingsTitle.LogoSprite.Color;

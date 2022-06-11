@@ -36,7 +36,6 @@ public class InfiniteScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         {
             scrollRect.onValueChanged.AddListener(HandleScroll);
         }
-        // MenuUI.OnSetCategoriesUIEvent += Initialize;
     }
 
     private void OnDisable()
@@ -45,7 +44,6 @@ public class InfiniteScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         {
             scrollRect.onValueChanged.RemoveListener(HandleScroll);
         }
-        // MenuUI.OnSetCategoriesUIEvent -= Initialize;
     }
 
     public void Initialize()
@@ -58,11 +56,6 @@ public class InfiniteScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         {
             return;
         }
-        // RectTransform[] itemsInsideHolder = InstantiateItems(categories.Count);
-        // for (int i = 0; i < itemsHolder.childCount; i++)
-        // {
-        //     itemsInsideHolder[i] = itemsHolder.GetChild(i) as RectTransform;
-        // }
 
         initialWidth = itemsHolder.rect.width;
         initialHeight = itemsHolder.rect.height;
@@ -110,7 +103,8 @@ public class InfiniteScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         {
             for (int i = 0; i < quantityLeft; i++)
             {
-                itemsInsideHolder.Add(Instantiate(itemPrefab, Vector2.zero, Quaternion.identity, itemsHolder.transform));
+                RectTransform menuImage = Instantiate(itemPrefab, Vector2.zero, Quaternion.identity, itemsHolder.transform);
+                itemsInsideHolder.Add(menuImage);
             }
         }
     }

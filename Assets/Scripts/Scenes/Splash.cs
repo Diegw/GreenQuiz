@@ -83,8 +83,8 @@ public class Splash : MonoBehaviour
         {
             return;
         }
-        // _hasSceneFinished = true;
-        // OnSceneFinishedEvent?.Invoke(EDirection.NEXT);
+        _hasSceneFinished = true;
+        OnSceneFinishedEvent?.Invoke(EDirection.NEXT);
     }
 
     private bool IsReady()
