@@ -1,0 +1,10 @@
+public enum EMenuCourse
+{
+    NONE = 0,
+    FOTOVOLTAICA = 1,
+    TERMICA = 2,
+    EOLICA = 3,
+    POLITICAS_AMBIENTALES = 4,
+    RESPONSABILIDAD_SOCIAL = 5,
+    HIGIENE_Y_SEGURIDAD_LABORAL = 6,
+}
