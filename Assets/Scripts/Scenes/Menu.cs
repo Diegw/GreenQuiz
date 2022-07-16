@@ -5,8 +5,8 @@ using UnityEngine.Events;
 
 public class Menu : MonoBehaviour
 {
+    public static Action<EMenuState> OnStateChangedEvent;
     public static Action<EDirection> OnSceneFinishedEvent;
-    public static Action<EButtonType> OnButtonPressedEvent;
 
     [SerializeField] private bool _hasSceneFinished = false;
     [SerializeField] private EMenuState _currentState = EMenuState.NONE;
@@ -28,19 +28,34 @@ public class Menu : MonoBehaviour
             Debug.LogError("Settings Menu is null");
             return;
         }
+        InitializeSelection();
         SelectNextState();
     }
 
+    private void InitializeSelection()
+    {
+        if (_menuSettings == null)
+        {
+            return;
+        }
+
+        _currentCategory = _menuSettings.GetFirstCategory();
+        _currentMode = _menuSettings.GetFirstMode();
+        _currentCourse = _menuSettings.GetFirstCourse(_currentCategory);
+    }
+    
     private void OnEnable()
     {
+        InfiniteScroll.OnEndDragEvent += ChangeSelection;
         AddButtonListener(_continueButton, SelectNextState);
     }
 
     private void OnDisable()
     {
+        InfiniteScroll.OnEndDragEvent -= ChangeSelection;
         RemoveButtonListener(_continueButton, SelectNextState);
     }
-    
+
     private void AddButtonListener(ButtonCustom buttonCustom, UnityAction action)
     {
         if(buttonCustom == null || buttonCustom.Button == null)
@@ -59,19 +74,36 @@ public class Menu : MonoBehaviour
         buttonCustom.Button.onClick.RemoveListener(action);
     }
 
+    private void ChangeSelection(EMenuCategory category, EMenuMode mode, EMenuCourse course)
+    {
+        if (category != EMenuCategory.NONE)
+        {
+            _currentCategory = category;
+        }
+        if (mode != EMenuMode.NONE)
+        {
+            _currentMode = mode;
+        }
+        if (course != EMenuCourse.NONE)
+        {
+            _currentCourse = course;
+        }
+    }
+
     private void SelectNextState()
     {
         if(_menuSettings == null)
         {
             return;
         }
-        SelectData();
+        ConfirmSelection();
         EMenuState state = _menuSettings.NewState(_currentState);
         if(state == _currentState)
         {
             return;
         }
         _currentState = state;
+        OnStateChangedEvent?.Invoke(state);
         SetUI();
         if(!_hasSceneFinished && state == EMenuState.GAMEPLAY)
         {
@@ -80,7 +112,7 @@ public class Menu : MonoBehaviour
         }
     }
 
-    private void SelectData()
+    private void ConfirmSelection()
     {
         GameManager.SetCategory(_currentCategory);
         GameManager.SetGameMode(_currentMode);
@@ -98,64 +130,41 @@ public class Menu : MonoBehaviour
         {
             _instructionsDisplay.text = _menuSettings.GetStateInstructions(actualState);
         }
+
+        if (actualState == EMenuState.NONE || actualState == EMenuState.GAMEPLAY)
+        {
+            return;
+        }
+        string itemName = "";
+        int itemCount = 0;
+        Sprite[] sprites = null;
         switch (actualState)
         {
             case EMenuState.CATEGORIES:
             {
-                _itemDisplay.text = _menuSettings.GetCategoryName(GameManager.Category);
-                _infiniteScroll.InstantiateItems(_menuSettings.GetCategoriesCount());
-                _infiniteScroll.SetItemsSprites(_menuSettings.GetCategoriesSprites());
-                _infiniteScroll.Initialize();
+                itemName = _menuSettings.GetCategoryName(GameManager.Category);
+                itemCount = _menuSettings.GetCategoriesCount();
+                sprites = _menuSettings.GetCategoriesSprites();
                 break;
             }
             case EMenuState.MODES:
             {
-                _itemDisplay.text = _menuSettings.GetModeName(GameManager.Mode);
-                _infiniteScroll.InstantiateItems(_menuSettings.GetModesCount());
-                _infiniteScroll.SetItemsSprites(_menuSettings.GetModesSprites());
-                _infiniteScroll.Initialize();
+                itemName = _menuSettings.GetModeName(GameManager.Mode);
+                itemCount = _menuSettings.GetModesCount();
+                sprites = _menuSettings.GetModesSprites();
                 break;
             }
             case EMenuState.COURSES:
             {
-                _itemDisplay.text = _menuSettings.GetCourseName(GameManager.Course);
-                _infiniteScroll.InstantiateItems(_menuSettings.GetCoursesCount(GameManager.Category));
-                _infiniteScroll.SetItemsSprites(_menuSettings.GetCoursesSprites(GameManager.Category));
-                _infiniteScroll.Initialize();
+                itemName = _menuSettings.GetCourseName(GameManager.Course);
+                itemCount = _menuSettings.GetCoursesCount(GameManager.Category);
+                sprites = _menuSettings.GetCoursesSprites(GameManager.Category);
                 break;
-            }
+            } 
         }
-    }
-
-    private string GetStateItemName(EMenuState state)
-    {
-        string stateItemName = "";
-        if(_menuSettings != null)
-        {
-            switch (state)
-            {
-                case EMenuState.CATEGORIES:
-                {
-                    stateItemName = _menuSettings.GetCategoryName(GameManager.Category);
-                    break;
-                }
-                case EMenuState.MODES:
-                {
-                    stateItemName = _menuSettings.GetModeName(GameManager.Mode);
-                    break;
-                }
-                case EMenuState.COURSES:
-                {
-                    stateItemName = _menuSettings.GetCourseName(GameManager.Course);
-                    break;
-                }
-            }
-        }
-        return stateItemName;
-    }
-
-    private void ContinueButton()
-    {
-        OnButtonPressedEvent?.Invoke(EButtonType.CONTINUE);
+        _itemDisplay.text = itemName;
+        _infiniteScroll.InstantiateItems(itemCount);
+        _infiniteScroll.SetItemsSprites(sprites);
+        _infiniteScroll.Initialize();
     }
 }

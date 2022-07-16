@@ -59,6 +59,34 @@ public class SettingsMenu : SerializedScriptableObject
         categoryName = _categories[categoryType].Name;
         return categoryName;
     }
+
+    public EMenuCategory GetFirstCategory()
+    {
+        EMenuCategory firstCategory = EMenuCategory.NONE;
+        int index = 0;
+        foreach (EMenuCategory category in _categories.Keys)
+        {
+            firstCategory = category;
+            if (index == 1)
+            {
+                break;
+            }
+            index++;
+        }
+        return firstCategory;
+    }
+    
+    public EMenuCategory[] GetCategories()
+    {
+        EMenuCategory[] categories = new EMenuCategory[_categories.Count];
+        int index = 0;
+        foreach (var category in _categories.Keys)
+        {
+            categories[index] = category;
+            index++;
+        }
+        return categories;
+    }
 #endregion
 
 #region MODES
@@ -88,6 +116,34 @@ public class SettingsMenu : SerializedScriptableObject
         }
         modeName = _modes[modeType].Name;
         return modeName;
+    }
+
+    public EMenuMode GetFirstMode()
+    {
+        EMenuMode firstMode = EMenuMode.NONE;
+        int index = 0;
+        foreach (EMenuMode mode in _modes.Keys)
+        {
+            firstMode = mode;
+            if (index == 1)
+            {
+                break;
+            }
+            index++;
+        }
+        return firstMode;
+    }
+    
+    public EMenuMode[] GetModes()
+    {
+        EMenuMode[] modes = new EMenuMode[_modes.Count];
+        int index = 0;
+        foreach (var mode in _modes.Keys)
+        {
+            modes[index] = mode;
+            index++;
+        }
+        return modes;
     }
 #endregion
 
@@ -119,7 +175,24 @@ public class SettingsMenu : SerializedScriptableObject
         return sprites;
     }
 
-    private EMenuCourse[] GetCategoryCourses(EMenuCategory category)
+    public EMenuCourse GetFirstCourse(EMenuCategory category)
+    {
+        EMenuCourse firstCourse = EMenuCourse.NONE;
+        EMenuCourse[] courses = GetCategoryCourses(category);
+        int index = 0;
+        foreach (EMenuCourse course in courses)
+        {
+            firstCourse = course;
+            if (index == 1)
+            {
+                break;
+            }
+            index++;
+        }
+        return firstCourse;
+    }
+    
+    public EMenuCourse[] GetCategoryCourses(EMenuCategory category)
     {
         EMenuCourse[] courses = null;
         if(_coursesPerCategory != null && _coursesPerCategory.ContainsKey(category))

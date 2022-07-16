@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -5,6 +6,8 @@ using System.Collections.Generic;
 
 public class InfiniteScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    public static Action<EMenuCategory, EMenuMode, EMenuCourse> OnEndDragEvent;
+    
     [SerializeField] private RectTransform itemPrefab;
     [SerializeField] private Canvas canvas;
     [SerializeField] private RectTransform itemsHolder;
@@ -12,58 +15,96 @@ public class InfiniteScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     [SerializeField] private bool horizontal, vertical;
     [SerializeField] private float hideThreshold;
     [SerializeField] private float startOffset;
-    private List<RectTransform> itemsInsideHolder = new List<RectTransform>();
-    private ScrollRect scrollRect;
-    private Vector2 lastDragPosition;
-    private bool positiveDrag;
-    private float initialWidth, initialHeight;
-    private float childWidth, childHeight;
-    private GraphicRaycaster graphicRaycaster;
-    private PointerEventData pointerEventData;
+    [SerializeField] private List<SMenuItem> itemsInsideHolder = new List<SMenuItem>();
+    private SettingsMenu _menuSettings = null;
+    private ScrollRect _scrollRect;
+    private Vector2 _lastDragPosition;
+    private bool _positiveDrag;
+    private float _initialWidth, _initialHeight;
+    private float _childWidth, _childHeight;
+    private GraphicRaycaster _graphicRaycaster;
+    private PointerEventData _pointerEventData;
+    private EMenuState _currentState;
+    [Serializable] private struct SMenuItem
+    {
+        public SMenuItem(EMenuCategory category, EMenuMode mode, EMenuCourse course, RectTransform rect)
+        {
+            _category = category;
+            _mode = mode;
+            _course = course;
+            _rectTransform = rect;
+            _image = rect == null ? null : rect.GetComponent<Image>();
+        }
+        public EMenuCategory Category => _category;
+        public EMenuMode Mode => _mode;
+        public EMenuCourse Course => _course;
+        public RectTransform RectTransform => _rectTransform;
+        public Image Image => _image;
+
+        [SerializeField] private EMenuCategory _category;
+        [SerializeField] private EMenuMode _mode;
+        [SerializeField] private EMenuCourse _course;
+        [SerializeField] private RectTransform _rectTransform;
+        [SerializeField] private Image _image;
+    }
 
     private void Awake()
     {
-        scrollRect = GetComponentInChildren<ScrollRect>();
+        _menuSettings = SettingsManager.Menu;
+        if(_menuSettings == null)
+        {
+            Debug.LogError("Settings Menu is null");
+            return;
+        }
+        _scrollRect = GetComponentInChildren<ScrollRect>();
         if(canvas != null)
         {
-            graphicRaycaster = canvas.GetComponent<GraphicRaycaster>();
+            _graphicRaycaster = canvas.GetComponent<GraphicRaycaster>();
         }
     }
 
     private void OnEnable()
     {
-        if(scrollRect != null)
+        Menu.OnStateChangedEvent += SetCurrentState;
+        if(_scrollRect != null)
         {
-            scrollRect.onValueChanged.AddListener(HandleScroll);
+            _scrollRect.onValueChanged.AddListener(HandleScroll);
         }
     }
 
     private void OnDisable()
     {
-        if(scrollRect != null)
+        Menu.OnStateChangedEvent -= SetCurrentState;
+        if(_scrollRect != null)
         {
-            scrollRect.onValueChanged.RemoveListener(HandleScroll);
+            _scrollRect.onValueChanged.RemoveListener(HandleScroll);
         }
+    }
+
+    private void SetCurrentState(EMenuState newState)
+    {
+        _currentState = newState;
     }
 
     public void Initialize()
     {
-        scrollRect.vertical = vertical;
-        scrollRect.horizontal = horizontal;
-        scrollRect.movementType = ScrollRect.MovementType.Unrestricted;
+        _scrollRect.vertical = vertical;
+        _scrollRect.horizontal = horizontal;
+        _scrollRect.movementType = ScrollRect.MovementType.Unrestricted;
 
         if(itemsHolder == null || itemsHolder.childCount <= 0)
         {
             return;
         }
 
-        initialWidth = itemsHolder.rect.width;
-        initialHeight = itemsHolder.rect.height;
+        Rect rect = itemsHolder.rect;
+        _initialWidth = rect.width;
+        _initialHeight = rect.height;
 
         if(itemsInsideHolder != null || itemsInsideHolder.Count > 0)
         {
-            childWidth = itemsInsideHolder[0].rect.width;
-            childHeight = itemsInsideHolder[0].rect.height;
+            _childWidth = itemsInsideHolder[0].RectTransform.rect.width;
+            _childHeight = itemsInsideHolder[0].RectTransform.rect.height;
         }
 
         horizontal = !vertical;
@@ -81,31 +122,47 @@ public class InfiniteScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     {
         if(itemsInsideHolder == null)
         {
-            itemsInsideHolder = new List<RectTransform>();
+            itemsInsideHolder = new List<SMenuItem>();
         }
 
-        int quantityLeft = quantity - itemsInsideHolder.Count;
-        if(quantityLeft == 0)
+        SMenuItem menuItem;
+        for (int i = 0; i < itemsInsideHolder.Count; i++)
         {
-            return;
+            menuItem = itemsInsideHolder[i];
+            Destroy(menuItem.RectTransform.gameObject);
         }
-
-        if(quantityLeft < 0)
+        itemsInsideHolder.Clear();
+        
+        EMenuCategory[] categories = null;
+        EMenuMode[] modes = null;
+        EMenuCourse[] courses = null;
+        switch (_currentState)
         {
-            for (int i = Mathf.Abs(quantityLeft) - 1; i >= 0 ; i--)
+            case EMenuState.CATEGORIES:
             {
-                RectTransform rectTransform = itemsInsideHolder[i];
-                itemsInsideHolder.Remove(rectTransform);
-                Destroy(rectTransform.gameObject);
+                categories = _menuSettings.GetCategories();
+                break;
             }
+            case EMenuState.MODES:
+            {
+                modes = _menuSettings.GetModes();
+                break;
+            }
+            case EMenuState.COURSES:
+            {
+                courses = _menuSettings.GetCategoryCourses(GameManager.Category);
+                break;
+            } 
         }
-        else
+        for (int i = 0; i < quantity; i++)
         {
-            for (int i = 0; i < quantityLeft; i++)
-            {
-                RectTransform menuImage = Instantiate(itemPrefab, Vector2.zero, Quaternion.identity, itemsHolder.transform);
-                itemsInsideHolder.Add(menuImage);
-            }
+            EMenuCategory category = categories == null ? EMenuCategory.NONE : categories[i];
+            EMenuMode mode = modes == null ? EMenuMode.NONE : modes[i];
+            EMenuCourse course = courses == null ? EMenuCourse.NONE : courses[i];
+            
+            RectTransform rect = Instantiate(itemPrefab, Vector2.zero, Quaternion.identity, itemsHolder.transform);
+            SMenuItem newMenuItem = new SMenuItem(category, mode, course, rect);
+            itemsInsideHolder.Add(newMenuItem);
         }
     }
 
@@ -113,12 +170,12 @@ public class InfiniteScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     {
         if(sprites.Length != itemsInsideHolder.Count)
         {
-            Debug.LogError($"Trying to assing {sprites.Length} sprites into {itemsInsideHolder.Count} items");
+            Debug.LogError($"Trying to assign {sprites.Length} sprites into {itemsInsideHolder.Count} items");
             return;
         }
         for (int i = 0; i < itemsInsideHolder.Count; i++)
         {
-            Image image = itemsInsideHolder[i].GetComponent<Image>();
+            Image image = itemsInsideHolder[i].Image;
             if(image)
             {
                 image.sprite = sprites[i];       
@@ -128,20 +185,20 @@ public class InfiniteScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
     private void InitializeContentHorizontal()
     {
-        float initialX = 0 - (initialWidth * 0.5f);
-        float positionOffset = childWidth * 0.5f;
+        float initialX = 0 - (_initialWidth * 0.5f);
+        float positionOffset = _childWidth * 0.5f;
         for (int i = 0; i < itemsInsideHolder.Count; i++)
         {
             Vector2 childPos = Vector2.zero;
             if(i == 0)
             {
-                childPos.x -= childWidth + itemSpacing;
+                childPos.x -= _childWidth + itemSpacing;
             }
             else if(i > 1)
             {
-                childPos.x += ((i - 1) * (childWidth + itemSpacing));
+                childPos.x += ((i - 1) * (_childWidth + itemSpacing));
             }
-            itemsInsideHolder[i].localPosition = childPos;
+            itemsInsideHolder[i].RectTransform.localPosition = childPos;
             // Vector2 childPos = childItemsHolder[i].localPosition;
             // childPos.x = initialX + positionOffset + i * (childWidth + itemSpacing) - startOffset;
             // childItemsHolder[i].localPosition = childPos;
@@ -150,50 +207,34 @@ public class InfiniteScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
     private void InitializeContentVertical()
     {
-        float initialY = 0 - (initialHeight * 0.5f);
-        float positionOffset = childHeight * 0.5f;
+        float initialY = 0 - (_initialHeight * 0.5f);
+        float positionOffset = _childHeight * 0.5f;
         for (int i = 0; i < itemsInsideHolder.Count; i++)
         {
-            Vector2 childPos = itemsInsideHolder[i].localPosition;
-            childPos.y = initialY + positionOffset + i * (childHeight + itemSpacing);
-            itemsInsideHolder[i].localPosition = childPos;
+            Vector2 childPos = itemsInsideHolder[i].RectTransform.localPosition;
+            childPos.y = initialY + positionOffset + i * (_childHeight + itemSpacing);
+            itemsInsideHolder[i].RectTransform.localPosition = childPos;
         }
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        lastDragPosition = eventData.position;
+        _lastDragPosition = eventData.position;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        AdjustImages();
+        Image imageHit = AdjustAndPick();
+        SearchAndInform(imageHit);
         HandleScroll(itemsHolder.position);
     }
 
-    private Image GetImageFromRaycast(EDirection side = EDirection.NONE)
+    private Image AdjustAndPick()
     {
-        Image image = null;
-        if (InputManager.EventSystem != null && graphicRaycaster != null)
-        {
-            List<RaycastResult> results = new List<RaycastResult>();
-            float positionX = (Screen.width / 2) + ((itemSpacing + 5) * (int)side);
-            pointerEventData = new PointerEventData(InputManager.EventSystem);
-            pointerEventData.position = new Vector3(positionX, Screen.height / 2, 0);
-            graphicRaycaster.Raycast(pointerEventData, results);
-            if (results != null && results.Count == 1)
-            {
-                image = results[0].gameObject.GetComponent<Image>();
-            }
-        }
-        return image;
-    }
-
-    private void AdjustImages()
-    {
-        Image imageHit = GetImageFromRaycast(EDirection.NONE);
+        Image imageHit = null;
+        Image firstImageHit = GetImageFromRaycast(EDirection.NONE);
         Vector2 newImagesPosition = Vector2.zero;
-        if(imageHit == null)
+        if(firstImageHit == null)
         {
             Image rightImage = GetImageFromRaycast(EDirection.NEXT);
             Image leftImage = GetImageFromRaycast(EDirection.PREVIOUS);
@@ -203,69 +244,113 @@ public class InfiniteScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
                 float distanceRightImage = rightImage.transform.position.x - (Screen.width / 2);
                 if(distanceLeftImage > distanceRightImage)
                 {
+                    imageHit = rightImage;
                     newImagesPosition = new Vector2(itemsHolder.anchoredPosition.x - distanceRightImage, itemsHolder.anchoredPosition.y);
                 }
                 else
                 {
+                    imageHit = leftImage;
                     newImagesPosition = new Vector2(itemsHolder.anchoredPosition.x + distanceLeftImage, itemsHolder.anchoredPosition.y);
                 }
             }
         }
         else
         {
-            float distance = (Screen.width / 2) - imageHit.transform.position.x;
+            imageHit = firstImageHit;
+            float distance = (Screen.width / 2) - firstImageHit.transform.position.x;
             newImagesPosition = new Vector2(itemsHolder.anchoredPosition.x + distance, itemsHolder.anchoredPosition.y);
         }
         itemsHolder.anchoredPosition = newImagesPosition;
+        return imageHit;
+    }
+
+    private void SearchAndInform(Image image)
+    {
+        SMenuItem newMenuItem = new SMenuItem();
+        if (image == null)
+        {
+            return;
+        }
+        foreach (var menuItem in itemsInsideHolder)
+        {
+            if (menuItem.Image != null && menuItem.Image == image)
+            {
+                newMenuItem = menuItem;
+                break;
+            }
+        }
+        OnEndDragEvent?.Invoke(newMenuItem.Category, newMenuItem.Mode, newMenuItem.Course);
+    }
+
+    private Image GetImageFromRaycast(EDirection side = EDirection.NONE)
+    {
+        Image image = null;
+        if (InputManager.EventSystem != null && _graphicRaycaster != null)
+        {
+            List<RaycastResult> results = new List<RaycastResult>();
+            float positionX = (Screen.width / 2) + ((itemSpacing + 5) * (int)side);
+            _pointerEventData = new PointerEventData(InputManager.EventSystem);
+            _pointerEventData.position = new Vector3(positionX, Screen.height / 2, 0);
+            _graphicRaycaster.Raycast(_pointerEventData, results);
+            foreach (RaycastResult result in results)
+            {
+                image = result.gameObject.GetComponent<Image>();
+                if (image != null)
+                {
+                    break;
+                }
+            }
+        }
+        return image;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         if (vertical)
         {
-            positiveDrag = eventData.position.y > lastDragPosition.y;
+            _positiveDrag = eventData.position.y > _lastDragPosition.y;
         }
         else if (horizontal)
         {
-            positiveDrag = eventData.position.x > lastDragPosition.x;
+            _positiveDrag = eventData.position.x > _lastDragPosition.x;
         }
 
-        lastDragPosition = eventData.position;
+        _lastDragPosition = eventData.position;
     }
 
     public void HandleScroll(Vector2 position)
     {
-        int currentIndex = positiveDrag ? scrollRect.content.childCount - 1 : 0;
-        var currentItem = scrollRect.content.GetChild(currentIndex);
+        int currentIndex = _positiveDrag ? _scrollRect.content.childCount - 1 : 0;
+        var currentItem = _scrollRect.content.GetChild(currentIndex);
         if (!ReachedThreshold(currentItem))
         {
             return;
         }
 
-        int lastIndex = positiveDrag ? 0 : scrollRect.content.childCount - 1;
-        Transform lastItem = scrollRect.content.GetChild(lastIndex);
+        int lastIndex = _positiveDrag ? 0 : _scrollRect.content.childCount - 1;
+        Transform lastItem = _scrollRect.content.GetChild(lastIndex);
         Vector2 newPosition = lastItem.position;
 
-        if (positiveDrag)
+        if (_positiveDrag)
         {
             if(vertical)
             {
-                newPosition.y = lastItem.position.y - childHeight + itemSpacing;
+                newPosition.y = lastItem.position.y - _childHeight + itemSpacing;
             }
             else
             {
-                newPosition.x = lastItem.position.x - childWidth - itemSpacing;
+                newPosition.x = lastItem.position.x - _childWidth - itemSpacing;
             }
         }
         else
         {
             if(vertical)
             {
-                newPosition.y = lastItem.position.y + childHeight - itemSpacing;
+                newPosition.y = lastItem.position.y + _childHeight - itemSpacing;
             }
             else
             {
-                newPosition.x = lastItem.position.x + childWidth + itemSpacing;
+                newPosition.x = lastItem.position.x + _childWidth + itemSpacing;
             }
         }
 
@@ -277,15 +362,15 @@ public class InfiniteScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     {
         if (vertical)
         {
-            float posYThreshold = transform.position.y + initialHeight * 0.5f + hideThreshold;
-            float negYThreshold = transform.position.y - initialHeight * 0.5f - hideThreshold;
-            return positiveDrag ? item.position.y - childWidth * 0.5f > posYThreshold : item.position.y + childWidth * 0.5f < negYThreshold;
+            float posYThreshold = transform.position.y + _initialHeight * 0.5f + hideThreshold;
+            float negYThreshold = transform.position.y - _initialHeight * 0.5f - hideThreshold;
+            return _positiveDrag ? item.position.y - _childWidth * 0.5f > posYThreshold : item.position.y + _childWidth * 0.5f < negYThreshold;
         }
         else
         {
-            float posXThreshold = transform.position.x + initialWidth * 0.5f + hideThreshold;
-            float negXThreshold = transform.position.x - initialWidth * 0.5f - hideThreshold;
-            return positiveDrag ? item.position.x - childWidth * 0.5f > posXThreshold : item.position.x + childWidth * 0.5f < negXThreshold;
+            float posXThreshold = transform.position.x + _initialWidth * 0.5f + hideThreshold;
+            float negXThreshold = transform.position.x - _initialWidth * 0.5f - hideThreshold;
+            return _positiveDrag ? item.position.x - _childWidth * 0.5f > posXThreshold : item.position.x + _childWidth * 0.5f < negXThreshold;
         }
     }
 }
