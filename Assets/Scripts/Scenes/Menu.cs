@@ -38,7 +38,6 @@ public class Menu : MonoBehaviour
         {
             return;
         }
-
         _currentCategory = _menuSettings.GetFirstCategory();
         _currentMode = _menuSettings.GetFirstMode();
         _currentCourse = _menuSettings.GetFirstCourse(_currentCategory);
@@ -88,6 +87,7 @@ public class Menu : MonoBehaviour
         {
             _currentCourse = course;
         }
+        SetItemNames();
     }
 
     private void SelectNextState()
@@ -135,36 +135,56 @@ public class Menu : MonoBehaviour
         {
             return;
         }
-        string itemName = "";
+        SetItemNames();
         int itemCount = 0;
         Sprite[] sprites = null;
         switch (actualState)
         {
             case EMenuState.CATEGORIES:
             {
-                itemName = _menuSettings.GetCategoryName(GameManager.Category);
                 itemCount = _menuSettings.GetCategoriesCount();
                 sprites = _menuSettings.GetCategoriesSprites();
                 break;
             }
             case EMenuState.MODES:
             {
-                itemName = _menuSettings.GetModeName(GameManager.Mode);
                 itemCount = _menuSettings.GetModesCount();
                 sprites = _menuSettings.GetModesSprites();
                 break;
             }
             case EMenuState.COURSES:
             {
-                itemName = _menuSettings.GetCourseName(GameManager.Course);
                 itemCount = _menuSettings.GetCoursesCount(GameManager.Category);
                 sprites = _menuSettings.GetCoursesSprites(GameManager.Category);
                 break;
             } 
         }
-        _itemDisplay.text = itemName;
         _infiniteScroll.InstantiateItems(itemCount);
         _infiniteScroll.SetItemsSprites(sprites);
         _infiniteScroll.Initialize();
+    }
+
+    private void SetItemNames()
+    {
+        string itemName = "";
+        switch (_currentState)
+        {
+            case EMenuState.CATEGORIES:
+            {
+                itemName = _menuSettings.GetCategoryName(_currentCategory);
+                break;
+            }
+            case EMenuState.MODES:
+            {
+                itemName = _menuSettings.GetModeName(_currentMode);
+                break;
+            }
+            case EMenuState.COURSES:
+            {
+                itemName = _menuSettings.GetCourseName(_currentCourse);
+                break;
+            } 
+        }
+        _itemDisplay.text = itemName;
     }
 }

@@ -164,6 +164,9 @@ public class InfiniteScroll : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             SMenuItem newMenuItem = new SMenuItem(category, mode, course, rect);
             itemsInsideHolder.Add(newMenuItem);
         }
+
+        float y = itemsHolder.localPosition.y;
+        itemsHolder.localPosition = new Vector3(0, y);
     }
 
     public void SetItemsSprites(Sprite[] sprites)
