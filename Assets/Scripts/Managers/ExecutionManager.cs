@@ -7,7 +7,7 @@ using MEC;
 public class ExecutionManager : SerializedMonoBehaviour
 {
     public static Action OnFirstFrameEvent;
-    public static Action OnSetUpReadyEvent;
+    public static Action<EDirection> OnSetUpReadyEvent;
 
     [SerializeField] private List<IManager> _managers = new List<IManager>();
     private static ExecutionManager _instance = null;
@@ -39,6 +39,6 @@ public class ExecutionManager : SerializedMonoBehaviour
             manager.Activate();
         }
         Debug.LogWarning("MANAGERS READY");
-        OnSetUpReadyEvent?.Invoke();
+        OnSetUpReadyEvent?.Invoke(EDirection.NEXT);
     }
 }

@@ -27,6 +27,7 @@ public class ScenesManager : MonoBehaviour, IManager
         SceneManager.sceneUnloaded += OnSceneUnloaded;
         SceneManager.sceneLoaded += OnSceneLoaded;
 
+        ExecutionManager.OnSetUpReadyEvent += LoadScene;
         Splash.OnSceneFinishedEvent += LoadScene;
         Title.OnSceneFinishedEvent += LoadScene;
         Menu.OnSceneFinishedEvent += LoadScene;
@@ -43,6 +44,7 @@ public class ScenesManager : MonoBehaviour, IManager
         SceneManager.sceneUnloaded -= OnSceneUnloaded;
         SceneManager.sceneLoaded -= OnSceneLoaded;
         
+        ExecutionManager.OnSetUpReadyEvent -= LoadScene;
         Splash.OnSceneFinishedEvent -= LoadScene;
         Title.OnSceneFinishedEvent -= LoadScene;
         Menu.OnSceneFinishedEvent -= LoadScene;

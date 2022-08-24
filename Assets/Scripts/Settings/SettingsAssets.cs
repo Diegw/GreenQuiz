@@ -1,60 +1,54 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
-public class SettingsAssets : ScriptableObject
+public class SettingsAssets : SerializedScriptableObject
 {
-    public BackgroundAssetData GameBackgroundData => _gameBackgroundData;
-    public InstructionsAssetData InstructionsData => _instructionsData;
-    public ButtonAssetData ButtonData => _buttonData;
+    [SerializeField, DictionaryDrawerSettings(KeyLabel = "ColorID", ValueLabel = "Color")] 
+    private Dictionary<int, Color> _customAssetColors = new Dictionary<int, Color>();
     
-    [SerializeField, HideLabel, FoldoutGroup("Game Background")] private BackgroundAssetData _gameBackgroundData;
-    [SerializeField, HideLabel, FoldoutGroup("Instructions")] private InstructionsAssetData _instructionsData;
-    [SerializeField, HideLabel, FoldoutGroup("Button")] private ButtonAssetData _buttonData;
+    [SerializeField, DictionaryDrawerSettings(KeyLabel = "SpriteID", ValueLabel = "Sprite")] 
+    private Dictionary<int, Sprite> _customAssetSprites = new Dictionary<int, Sprite>();
+
+    public CustomAssetData GetCustomAssetData(CustomAssetID assetID)
+    {
+        return new CustomAssetData(GetCustomSprite(assetID.SpriteID), GetCustomColor(assetID.ColorID));
+    }
+    
+    private Sprite GetCustomSprite(int spriteID)
+    {
+        if (_customAssetSprites == null || _customAssetSprites.Count <= 0 || !_customAssetSprites.ContainsKey(spriteID))
+        {
+            return null;
+        }
+        return _customAssetSprites[spriteID];
+    }
+
+    private Color GetCustomColor(int colorID)
+    {
+        if (_customAssetColors == null || _customAssetColors.Count <= 0 || !_customAssetColors.ContainsKey(colorID))
+        {
+            return Color.white;
+        }
+        return _customAssetColors[colorID];
+    }
 }
 
-[Serializable] public struct BackgroundAssetData
+[Serializable] public struct CustomAssetID
 {
-    public AssetData BackgroundData => _backgroundData;
-    public AssetData DrawingData => _drawingData;
-
-    [SerializeField] private AssetData _backgroundData;
-    [SerializeField] private AssetData _drawingData;
+    [field: SerializeField] public int SpriteID { get; }
+    [field: SerializeField] public int ColorID { get; }
 }
 
-[Serializable] public struct InstructionsAssetData
+[Serializable] public struct CustomAssetData
 {
-    public Color TextColor => _textColor;
-    public AssetData BackBackgroundData => _backBackgroundData;
-    public AssetData MiddleBackgroundData => _middleBackgroundData;
-    public AssetData FrontBackgroundData => _frontBackgroundData;
+    public CustomAssetData(Sprite customSprite, Color customColor)
+    {
+        CustomSprite = customSprite;
+        CustomColor = customColor;
+    }
 
-    [SerializeField] private Color _textColor;
-    [SerializeField] private AssetData _backBackgroundData;
-    [SerializeField] private AssetData _middleBackgroundData;
-    [SerializeField] private AssetData _frontBackgroundData;
-}
-
-[Serializable] public struct ButtonAssetData
-{
-    public Color TextColor => _textColor;
-    public AssetData BackData => _backBackgroundData;
-    public AssetData HighlightData => _highlightBackgroundData;
-    public AssetData FillData => _fillBackgroundData;
-    public AssetData ShadingData => _shadingBackgroundData;
-
-    [SerializeField] private Color _textColor;
-    [SerializeField] private AssetData _backBackgroundData;
-    [SerializeField] private AssetData _highlightBackgroundData;
-    [SerializeField] private AssetData _fillBackgroundData;
-    [SerializeField] private AssetData _shadingBackgroundData;
-}
-
-[Serializable] public struct AssetData
-{
-    public Color Color => _color;
-    public Sprite Sprite => _sprite;
-
-    [SerializeField] private Color _color;
-    [SerializeField] private Sprite _sprite;
+    [field: SerializeField] public Sprite CustomSprite { get; }
+    [field: SerializeField] public Color CustomColor { get; }
 }

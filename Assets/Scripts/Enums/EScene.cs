@@ -5,4 +5,5 @@ public enum EScene
     TITLE = 2,
     MENU = 3,
     GAMEPLAY = 4,
+    SETUP = 5,
 }
