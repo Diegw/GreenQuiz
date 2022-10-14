@@ -1,38 +1,48 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
 using TMPro;
 
-public class CustomAsset : MonoBehaviour
+[Serializable] public class CustomAsset
 {
-    [SerializeField, HideLabel, BoxGroup("AssetID")] private CustomAssetID _assetID;
-    [SerializeField] private TMP_Text _display = null;
-    [SerializeField] private Image _image = null;
-    private SettingsAssets _settingsAssets = null;
+    [SerializeField, HideLabel, FoldoutGroup("Custom Asset")] private CustomAssetContainer _customAsset;
 
-    private void Start()
+    public void SetCustomAsset(ref SettingsAssets settingsAssets)
     {
-        _settingsAssets = SettingsManager.Assets;
-        SetCustomAssetData();
+        _customAsset.SetCustomAsset(ref settingsAssets);
     }
+}
 
-    private void SetCustomAssetData()
+[Serializable] public class CustomAssetContainer
+{
+    [SerializeField, HideLabel, BoxGroup("Asset ID")] private CustomAssetID _assetID;
+    [SerializeField] private TMP_Text[] _displays = null;
+    [SerializeField] private Image[] _images = null;
+
+    public void SetCustomAsset(ref SettingsAssets settingsAssets)
     {
-        if(_settingsAssets == null)
+        CustomAssetData customAssetData = settingsAssets.GetCustomAssetData(_assetID);
+        if (_images != null && _images.Length > 0)
         {
-            Debug.LogError("Settings Assets is null");
-            return;
+            foreach (Image image in _images)
+            {
+                if (image != null)
+                {
+                    image.sprite = customAssetData.CustomSprite;
+                    image.color = customAssetData.CustomSpriteColor;
+                }
+            }
         }
-
-        CustomAssetData customAssetData = _settingsAssets.GetCustomAssetData(_assetID);
-        if (_image != null)
+        if (_displays != null && _displays.Length > 0)
         {
-            _image.sprite = customAssetData.CustomSprite;
-            _image.color = customAssetData.CustomColor;
-        }
-        if (_display != null)
-        {
-            _display.color = customAssetData.CustomColor;
+            foreach (TMP_Text display in _displays)
+            {
+                if (display != null)
+                {
+                    display.color = customAssetData.CustomTextColor;
+                }
+            }
         }
     }
 }

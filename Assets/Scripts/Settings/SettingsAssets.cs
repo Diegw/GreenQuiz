@@ -13,7 +13,9 @@ public class SettingsAssets : SerializedScriptableObject
 
     public CustomAssetData GetCustomAssetData(CustomAssetID assetID)
     {
-        return new CustomAssetData(GetCustomSprite(assetID.SpriteID), GetCustomColor(assetID.ColorID));
+        return new CustomAssetData(GetCustomSprite(assetID.SpriteID),
+                                GetCustomColor(assetID.ColorSpriteID),
+                                GetCustomColor(assetID.ColorTextID));
     }
     
     private Sprite GetCustomSprite(int spriteID)
@@ -37,18 +39,28 @@ public class SettingsAssets : SerializedScriptableObject
 
 [Serializable] public struct CustomAssetID
 {
+    public CustomAssetID(int spriteID, int colorSpriteID, int colorTextID)
+    {
+        SpriteID = spriteID;
+        ColorSpriteID = colorSpriteID;
+        ColorTextID = colorTextID;
+    }
+
     [field: SerializeField] public int SpriteID { get; }
-    [field: SerializeField] public int ColorID { get; }
+    [field: SerializeField] public int ColorSpriteID { get; }
+    [field: SerializeField] public int ColorTextID { get; }
 }
 
 [Serializable] public struct CustomAssetData
 {
-    public CustomAssetData(Sprite customSprite, Color customColor)
+    public CustomAssetData(Sprite customSprite, Color customSpriteColor, Color customTextColor)
     {
         CustomSprite = customSprite;
-        CustomColor = customColor;
+        CustomSpriteColor = customSpriteColor;
+        CustomTextColor = customTextColor;
     }
 
     [field: SerializeField] public Sprite CustomSprite { get; }
-    [field: SerializeField] public Color CustomColor { get; }
+    [field: SerializeField] public Color CustomSpriteColor { get; }
+    [field: SerializeField] public Color CustomTextColor { get; }
 }
