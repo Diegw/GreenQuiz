@@ -209,7 +209,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!114 &6459596322431689495
 MonoBehaviour:
@@ -248,10 +248,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _customAssets:
   - _customAsset:
+      _assetID:
+        _spriteID: 0
+        _colorSpriteID: 0
+        _colorTextID: 0
       _displays: []
       _images:
       - {fileID: 6459596321522909681}
   - _customAsset:
+      _assetID:
+        _spriteID: 0
+        _colorSpriteID: 0
+        _colorTextID: 0
       _displays: []
       _images:
       - {fileID: 6459596320874660241}

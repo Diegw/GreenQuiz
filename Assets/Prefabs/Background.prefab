@@ -85,7 +85,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8542836705863981141}
-  - component: {fileID: 8542836705863981140}
+  - component: {fileID: 4915619377973004649}
   - component: {fileID: 6041627691547227464}
   m_Layer: 0
   m_Name: Background
@@ -109,7 +109,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8542836705863981140
+--- !u!114 &4915619377973004649
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -118,9 +118,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8542836705863981143}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9781531928d53c4d928be1c170d6687, type: 3}
+  m_Script: {fileID: 11500000, guid: adaeb2846ba5d5340bb4ff5ccdb6b993, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _singleton: 1
 --- !u!114 &6041627691547227464
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,10 +136,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _customAssets:
   - _customAsset:
+      _assetID:
+        _spriteID: 0
+        _colorSpriteID: 0
+        _colorTextID: 0
       _displays: []
       _images:
       - {fileID: 8542836705787400378}
   - _customAsset:
+      _assetID:
+        _spriteID: 0
+        _colorSpriteID: 0
+        _colorTextID: 0
       _displays: []
       _images:
       - {fileID: 8542836706452238476}

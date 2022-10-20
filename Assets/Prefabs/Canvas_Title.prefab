@@ -482,10 +482,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _customAssets:
   - _customAsset:
+      _assetID:
+        _spriteID: 0
+        _colorSpriteID: 0
+        _colorTextID: 0
       _displays: []
       _images:
       - {fileID: 8881711256465191226}
   - _customAsset:
+      _assetID:
+        _spriteID: 0
+        _colorSpriteID: 0
+        _colorTextID: 2
       _displays:
       - {fileID: 4698207169433523220}
       _images:

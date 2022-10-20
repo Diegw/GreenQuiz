@@ -41,14 +41,18 @@ public class SettingsAssets : SerializedScriptableObject
 {
     public CustomAssetID(int spriteID, int colorSpriteID, int colorTextID)
     {
-        SpriteID = spriteID;
-        ColorSpriteID = colorSpriteID;
-        ColorTextID = colorTextID;
+        _spriteID = spriteID;
+        _colorSpriteID = colorSpriteID;
+        _colorTextID = colorTextID;
     }
 
-    [field: SerializeField] public int SpriteID { get; }
-    [field: SerializeField] public int ColorSpriteID { get; }
-    [field: SerializeField] public int ColorTextID { get; }
+    public int SpriteID => _spriteID;
+    public int ColorSpriteID => _colorSpriteID; 
+    public int ColorTextID => _colorTextID;
+
+    [SerializeField] private int _spriteID;
+    [SerializeField] private int _colorSpriteID;
+    [SerializeField] private int _colorTextID;
 }
 
 [Serializable] public struct CustomAssetData

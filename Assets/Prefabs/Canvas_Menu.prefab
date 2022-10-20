@@ -234,7 +234,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 0}
+  m_Texture: {fileID: 2800000, guid: 98fcf53ebd63ad0438717f96d79a2606, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -301,7 +301,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.4716981, g: 0.40272337, b: 0.40272337, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -499,6 +499,7 @@ GameObject:
   - component: {fileID: 8016348984977823934}
   - component: {fileID: 8016348984977823933}
   - component: {fileID: 8016348984977823932}
+  - component: {fileID: 1543423243007194721}
   m_Layer: 5
   m_Name: Canvas_Menu
   m_TagString: Untagged
@@ -587,6 +588,36 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 55
+--- !u!114 &1543423243007194721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8016348984977823931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3584cee50ecdbcb49911c1d00f6745ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _customAssets:
+  - _customAsset:
+      _assetID:
+        _spriteID: 0
+        _colorSpriteID: 0
+        _colorTextID: 0
+      _displays: []
+      _images:
+      - {fileID: 8016348983272805765}
+  - _customAsset:
+      _assetID:
+        _spriteID: 0
+        _colorSpriteID: 0
+        _colorTextID: 2
+      _displays:
+      - {fileID: 8016348984500622884}
+      _images:
+      - {fileID: 8016348984386741291}
 --- !u!1 &8016348985003846787
 GameObject:
   m_ObjectHideFlags: 0
@@ -732,6 +763,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8016348985003846788}
     m_Modifications:
+    - target: {fileID: 533564717345868099, guid: 87b4d788e4e9bf047a5860432163dae6, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 822334489988140622, guid: 87b4d788e4e9bf047a5860432163dae6, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -821,6 +856,10 @@ PrefabInstance:
       value: Button
       objectReference: {fileID: 0}
     - target: {fileID: 6345938790245110023, guid: 87b4d788e4e9bf047a5860432163dae6, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: c64c41e9e72a89445bef10702a1c7454, type: 3}
+    - target: {fileID: 6345938790245110023, guid: 87b4d788e4e9bf047a5860432163dae6, type: 3}
       propertyPath: m_Color.b
       value: 1
       objectReference: {fileID: 0}
@@ -829,6 +868,26 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6345938790245110023, guid: 87b4d788e4e9bf047a5860432163dae6, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6345938790245110023, guid: 87b4d788e4e9bf047a5860432163dae6, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6345938790245110023, guid: 87b4d788e4e9bf047a5860432163dae6, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6526337430974629071, guid: 87b4d788e4e9bf047a5860432163dae6, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6526337430974629071, guid: 87b4d788e4e9bf047a5860432163dae6, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6526337430974629071, guid: 87b4d788e4e9bf047a5860432163dae6, type: 3}
       propertyPath: m_Color.r
       value: 1
       objectReference: {fileID: 0}
