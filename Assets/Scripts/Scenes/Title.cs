@@ -28,9 +28,6 @@ public class Title : MonoBehaviourCustom
             Debug.LogError("Title settings is null");
             return;
         }
-
-        _logo.sprite = _settingsTitle.LogoSprite.Sprite;
-        _logo.color = _settingsTitle.LogoSprite.Color;
     }
 
     private void OnEnable()

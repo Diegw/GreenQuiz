@@ -8,26 +8,34 @@ public class Splash : MonoBehaviour
 {
     public static Action<EDirection> OnSceneFinishedEvent;
 
-    [SerializeField] private Image _logo = null;
-    [SerializeField] private bool _hasSceneFinished = false;
+    [SerializeField] private bool _hasSplashFinished = false;
+    [SerializeField] private Transform _logosHolder = null;
+    private Image[] _logos = null;
     private SettingsSplash _settingsSplash = null;
-    private bool _isExecutionReady = false;
-    private bool _isSplashReady = false;
 
-    private void OnEnable()
+    private void Awake()
     {
-        SettingsManager.OnSetUpReadyEvent += SetSplashSettings;
-        ExecutionManager.OnFirstFrameEvent += AfterFirstFrame;
-        ExecutionManager.OnSetUpReadyEvent += OnExecutionReady;
+        SetLogos();
+        SetSplashSettings();
+        Timing.RunCoroutine(Coroutine_Splash());
     }
 
-    private void OnDisable()
+    private void SetLogos()
     {
-        SettingsManager.OnSetUpReadyEvent -= SetSplashSettings;
-        ExecutionManager.OnFirstFrameEvent -= AfterFirstFrame;
-        ExecutionManager.OnSetUpReadyEvent -= OnExecutionReady;
+        if (_logosHolder == null)
+        {
+            Debug.LogError("Splash - LogosHolder is null");
+            return;
+        }
+        Image[] images = _logosHolder.GetComponentsInChildren<Image>();
+        if (images == null || images.Length <= 0)
+        {
+            Debug.LogError("Splash - Couldn't find any logo images");
+            return;
+        }
+        _logos = images;
     }
-    
+
     private void SetSplashSettings()
     {
         _settingsSplash = SettingsManager.Splash;
@@ -37,62 +45,34 @@ public class Splash : MonoBehaviour
         }
     }
 
-    private void AfterFirstFrame()
-    {
-        Timing.RunCoroutine(Coroutine_Splash());
-    }
-
     private IEnumerator<float> Coroutine_Splash()
     {
-        while(_settingsSplash == null)
+        if(_settingsSplash == null)
         {
-            yield return Timing.WaitForOneFrame;
+            yield break;
         }
-        SetLogo(_settingsSplash.GetDeveloperLogo());
-        yield return Timing.WaitForSeconds(_settingsSplash.GetDeveloperSeconds());
-        SetLogo(_settingsSplash.GetPublisherLogo());
-        yield return Timing.WaitForSeconds(_settingsSplash.GetPublisherSeconds());
-        OnSplashReady();
-    }
-
-    private void SetLogo(Sprite newSprite)
-    {
-        if(_logo == null)
-        {
-            Debug.LogError("Splash - Logo Image is null");
-            return;
-        }
-        _logo.sprite = newSprite;
-    }
-
-    private void OnExecutionReady()
-    {
-        _isExecutionReady = true;
+        ToggleLogos(0);
+        yield return Timing.WaitForSeconds(_settingsSplash.DeveloperSeconds);
+        ToggleLogos(1);
+        yield return Timing.WaitForSeconds(_settingsSplash.PublisherSeconds);
         TryToContinue();
     }
 
-    private void OnSplashReady()
+    private void ToggleLogos(int logoIndex)
     {
-        _isSplashReady = true;
-        TryToContinue();
+        for (int i = 0; i < _logos.Length; i++)
+        {
+            _logos[i].gameObject.SetActive(logoIndex == i);
+        }
     }
 
     private void TryToContinue()
     {
-        if(!IsReady() || _hasSceneFinished)
+        if(_hasSplashFinished)
         {
             return;
         }
-        _hasSceneFinished = true;
+        _hasSplashFinished = true;
         OnSceneFinishedEvent?.Invoke(EDirection.NEXT);
-    }
-
-    private bool IsReady()
-    {
-        if(!_isExecutionReady || !_isSplashReady)
-        {
-            return false;
-        }
-        return true;
     }
 }

@@ -16,7 +16,11 @@ public class SettingsMenu : SerializedScriptableObject
         EMenuState newMenuState = EMenuState.NONE;
         if(_nextStates != null && _nextStates.ContainsKey(currentState))
         {
-            newMenuState = _nextStates[currentState];;
+            newMenuState = _nextStates[currentState];
+            if (currentState == EMenuState.MODES && GameManager.Mode == EMenuMode.RANDOM)
+            {
+                newMenuState = EMenuState.GAMEPLAY;
+            }
         }
         return newMenuState;
     }
@@ -151,6 +155,10 @@ public class SettingsMenu : SerializedScriptableObject
     public string GetCourseName(EMenuCourse course)
     {
         string courseName = "";
+        if (_courses != null && _courses.ContainsKey(course))
+        {
+            courseName = _courses[course].Name;
+        }
         return courseName;
     }
 

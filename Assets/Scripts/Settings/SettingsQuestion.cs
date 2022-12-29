@@ -47,21 +47,24 @@ public class SettingsQuestion : SerializedScriptableObject
 
     public Stack<Question> GetQuestions(EMenuCategory categoryType, EMenuMode menuModeType, EMenuCourse courseType)
     {
+        Stack<Question> randomQuestions = new Stack<Question>();
         if(_questionsPerMatch <= 0)
         {
-            return null;
+            return randomQuestions;
         }
-        Stack<Question> randomQuestions = new Stack<Question>();
         Category category = GetCategory(categoryType);
         List<Course> courses = GetCourses(category, menuModeType, courseType);
-        
-        List<Question> questions = new List<Question>();
-        for (int i = 0; i < _questionsPerMatch; i++)
+
+        if (courses != null && courses.Count > 0)
         {
-            int randomCourseIndex = UnityEngine.Random.Range(0, courses.Count);
-            questions = courses[randomCourseIndex].Questions;
-            int randomQuestionIndex = UnityEngine.Random.Range(0, questions.Count);
-            randomQuestions.Push(new Question(questions[randomQuestionIndex]));
+            List<Question> questions = new List<Question>();
+            for (int i = 0; i < _questionsPerMatch; i++)
+            {
+                int randomCourseIndex = UnityEngine.Random.Range(0, courses.Count);
+                questions = courses[randomCourseIndex].Questions;
+                int randomQuestionIndex = UnityEngine.Random.Range(0, questions.Count);
+                randomQuestions.Push(new Question(questions[randomQuestionIndex]));
+            }
         }
         return randomQuestions;
     }
