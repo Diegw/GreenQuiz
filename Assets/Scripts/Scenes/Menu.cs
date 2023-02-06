@@ -16,8 +16,11 @@ public class Menu : MonoBehaviour
     [Header("UI")]
     [SerializeField] private TMP_Text _instructionsDisplay = null;
     [SerializeField] private TMP_Text _itemDisplay = null;
+    [SerializeField] private ButtonCustom _leftButton = null;
+    [SerializeField] private ButtonCustom _rightButton = null;
     [SerializeField] private ButtonCustom _continueButton = null;
-    [SerializeField] private InfiniteScroll _infiniteScroll = null;
+    [SerializeField] private EMenuCategory[] _categories = null;
+    [SerializeField] private EMenuMode[] _modes = null;
     private SettingsMenu _menuSettings = null;
 
     private void Awake()
@@ -38,20 +41,22 @@ public class Menu : MonoBehaviour
         {
             return;
         }
-        _currentCategory = _menuSettings.GetFirstCategory();
-        _currentMode = _menuSettings.GetFirstMode();
+        _currentCategory = (EMenuCategory)1;
+        _currentMode = (EMenuMode)1;
         _currentCourse = _menuSettings.GetFirstCourse(_currentCategory);
     }
     
     private void OnEnable()
     {
-        InfiniteScroll.OnEndDragEvent += ChangeSelection;
+        AddButtonListener(_leftButton, ChangePreviousSelection);
+        AddButtonListener(_rightButton, ChangeNextSelection);
         AddButtonListener(_continueButton, SelectNextState);
     }
 
     private void OnDisable()
     {
-        InfiniteScroll.OnEndDragEvent -= ChangeSelection;
+        RemoveButtonListener(_leftButton, ChangePreviousSelection);
+        RemoveButtonListener(_rightButton, ChangeNextSelection);
         RemoveButtonListener(_continueButton, SelectNextState);
     }
 
@@ -73,21 +78,89 @@ public class Menu : MonoBehaviour
         buttonCustom.Button.onClick.RemoveListener(action);
     }
 
-    private void ChangeSelection(EMenuCategory category, EMenuMode mode, EMenuCourse course)
+    private void ChangeNextSelection()
     {
-        if (category != EMenuCategory.NONE)
+        ChangeSelection(true);
+        SetSelectionNames();
+    }
+
+    private void ChangePreviousSelection()
+    {
+        ChangeSelection(false);
+        SetSelectionNames();
+    }
+
+    private void ChangeSelection(bool next)
+    {
+        switch (_currentState)
         {
-            _currentCategory = category;
+            case EMenuState.CATEGORIES:
+            {
+                _currentCategory = GetCategory(next);
+                break;
+            }
+            case EMenuState.MODES:
+            {
+                _currentMode = GetMode(next);
+                break;
+            }
+            case EMenuState.COURSES:
+            {
+                _currentCourse = _menuSettings.GetNewCourse(next, _currentCourse, _currentCategory);
+                break;
+            }
         }
-        if (mode != EMenuMode.NONE)
+    }
+    
+    private EMenuCategory GetCategory(bool next)
+    {
+        int newIndex = 0;
+        EMenuCategory newCategory = EMenuCategory.NONE;
+        for (int i = 0; i < _categories.Length; i++)
         {
-            _currentMode = mode;
+            // if (next)
+            // {
+            //     newIndex = i + 1 >= _categories.Length ? 0 : i+1;
+            // }
+            // else
+            // {
+            //     newIndex = i -1 < 0 ? _categories.Length-1 : i-1;
+            // }
+            newIndex = next ? 
+                i + 1 >= _categories.Length ? 0 : i+1 : 
+                i -1 < 0 ? _categories.Length-1 : i-1;
+
+            if (newIndex < _categories.Length && newIndex >= 0 && _categories[i] == _currentCategory)
+            {
+                newCategory = _categories[newIndex];
+                break;
+            }
         }
-        if (course != EMenuCourse.NONE)
+        return newCategory;
+    }
+    
+    private EMenuMode GetMode(bool next)
+    {
+        int newIndex = 0;
+        EMenuMode newMode = EMenuMode.NONE;
+        for (int i = 0; i < _modes.Length; i++)
         {
-            _currentCourse = course;
+            if (next)
+            {
+                newIndex = i + 1 >= _modes.Length ? 0 : i+1;
+            }
+            else
+            {
+                newIndex = i -1 < 0 ? _modes.Length-1 : i-1;
+            }
+
+            if (newIndex < _modes.Length && newIndex >= 0 && _modes[i] == _currentMode)
+            {
+                newMode = _modes[newIndex];
+                break;
+            }
         }
-        SetItemNames();
+        return newMode;
     }
 
     private void SelectNextState()
@@ -135,7 +208,7 @@ public class Menu : MonoBehaviour
         {
             return;
         }
-        SetItemNames();
+        SetSelectionNames();
         int itemCount = 0;
         Sprite[] sprites = null;
         switch (actualState)
@@ -159,12 +232,9 @@ public class Menu : MonoBehaviour
                 break;
             } 
         }
-        _infiniteScroll.InstantiateItems(itemCount);
-        _infiniteScroll.SetItemsSprites(sprites);
-        _infiniteScroll.Initialize();
     }
 
-    private void SetItemNames()
+    private void SetSelectionNames()
     {
         string itemName = "";
         switch (_currentState)

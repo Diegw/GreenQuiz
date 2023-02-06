@@ -11,7 +11,7 @@ public class Title : MonoBehaviourCustom
     private SettingsTitle _settingsTitle = null;
     private bool _hasSceneFinished = false;
 
-    private void Awake()
+    protected override void Awake()
     {
         if(AreThereNullReferences(_logo, _continueButton))
         {
