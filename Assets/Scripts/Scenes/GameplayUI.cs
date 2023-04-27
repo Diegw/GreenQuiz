@@ -11,7 +11,7 @@ public class GameplayUI : MonoBehaviour
 
     [TabGroup("REFERENCES"), SerializeField] private RectTransform _UI = null;
     [TabGroup("REFERENCES"), SerializeField] private TMP_Text _timerDisplay = null;
-    [TabGroup("REFERENCES"), SerializeField] private Image[] _timerImages = null;
+    [TabGroup("REFERENCES"), SerializeField] private Image _timerImage = null;
     [Title("Question")]
     [TabGroup("REFERENCES"), SerializeField] private Image _categoryImage = null;
     [TabGroup("REFERENCES"), SerializeField] private TMP_Text _questionNumber = null;
@@ -62,11 +62,8 @@ public class GameplayUI : MonoBehaviour
             return;
         }
         _timerDisplay.text = Mathf.Clamp(time, 0, time).ToString();
-        foreach (Image timerImage in _timerImages)
-        {
-            float fill = time / maxTime;
-            timerImage.fillAmount = fill;
-        }
+        float fill = time / maxTime;
+        _timerImage.fillAmount = fill;
     }
 
     private void UpdateQuestionUI(int questionsAnswer, int totalQuestions, Question question)
@@ -108,7 +105,7 @@ public class GameplayUI : MonoBehaviour
             Debug.LogError("Some Text Reference isnt assign");
             return true;
         }
-        if(_categoryImage == null || _timerImages == null || _timerImages.Length <= 0)
+        if(_categoryImage == null || _timerImage == null)
         {
             Debug.LogError("Some Image Reference isnt assign");
             return true;
