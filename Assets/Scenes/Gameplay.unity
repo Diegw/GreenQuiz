@@ -906,7 +906,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f722dce0a12815e4db864053718e0f94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _UI: {fileID: 0}
+  _UI: {fileID: 1893169894593642433}
   _timerDisplay: {fileID: 5790818795810947192}
   _timerImage: {fileID: 77822027801661727}
   _categoryImage: {fileID: 459311588}

@@ -118,14 +118,6 @@ public class Menu : MonoBehaviour
         EMenuCategory newCategory = EMenuCategory.NONE;
         for (int i = 0; i < _categories.Length; i++)
         {
-            // if (next)
-            // {
-            //     newIndex = i + 1 >= _categories.Length ? 0 : i+1;
-            // }
-            // else
-            // {
-            //     newIndex = i -1 < 0 ? _categories.Length-1 : i-1;
-            // }
             newIndex = next ? 
                 i + 1 >= _categories.Length ? 0 : i+1 : 
                 i -1 < 0 ? _categories.Length-1 : i-1;
@@ -177,6 +169,7 @@ public class Menu : MonoBehaviour
         }
         _currentState = state;
         OnStateChangedEvent?.Invoke(state);
+        if(state == EMenuState.COURSES) _currentCourse = _menuSettings.GetFirstCourse(_currentCategory);
         SetUI();
         if(!_hasSceneFinished && state == EMenuState.GAMEPLAY)
         {

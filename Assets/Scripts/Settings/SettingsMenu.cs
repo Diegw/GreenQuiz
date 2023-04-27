@@ -201,19 +201,15 @@ public class SettingsMenu : SerializedScriptableObject
         {
             return EMenuCourse.NONE;
         }
-        EMenuCourse[] courses = new EMenuCourse[_coursesPerCategory[category].Length];
-        EMenuCourse newCourse = EMenuCourse.NONE;
+        EMenuCourse[] courses = _coursesPerCategory[category];
         int newIndex = 0;
+        EMenuCourse newCourse = EMenuCourse.NONE;
         for (int i = 0; i < courses.Length; i++)
         {
-            if (next)
-            {
-                newIndex = i + 1 >= courses.Length ? 0 : i+1;
-            }
-            else
-            {
-                newIndex = i -1 < 0 ? courses.Length-1 : i-1;
-            }
+            newIndex = next ? 
+                i + 1 >= courses.Length ? 0 : i+1 : 
+                i -1 < 0 ? courses.Length-1 : i-1;
+
             if (newIndex < courses.Length && newIndex >= 0 && courses[i] == course)
             {
                 newCourse = courses[newIndex];
