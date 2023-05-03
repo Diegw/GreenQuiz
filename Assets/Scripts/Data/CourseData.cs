@@ -19,6 +19,6 @@ using Sirenix.OdinInspector;
 
     private void SetCourseName()
     {
-        _courseName = _course.Name;
+        _courseName = _course.CourseType.ToString();
     }
 }

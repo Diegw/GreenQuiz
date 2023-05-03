@@ -10,33 +10,20 @@ using Sirenix.OdinInspector;
     {
         if(category != null)
         {
-            _ID = category.ID;
-            _name = category.Name;
             _categoryType = category.CategoryType;
-            _courses = new List<CourseData>(category.CoursesData);
+            _questionsPerCourses = new List<CourseData>(category.QuestionsPerCourses);
         }
     }
-    public int ID => _ID;
     public EMenuCategory CategoryType => _categoryType;
-    public string Name => _name;
-    public Sprite Image => _image;
-    public List<CourseData> CoursesData => _courses;
-
-    [SerializeField, DisplayAsString] private int _ID = -1;
-    [SerializeField, OnValueChanged(nameof(SetID))] private EMenuCategory _categoryType = EMenuCategory.NONE;
-    [SerializeField] private string _name = "Category";
-    [SerializeField] private Sprite _image = null;
-    [SerializeField] private List<CourseData> _courses = new List<CourseData>();
-
-    private void SetID()
-    {
-        _ID = (int)_categoryType;
-    }
+    public List<CourseData> QuestionsPerCourses => _questionsPerCourses;
+    
+    [SerializeField] private EMenuCategory _categoryType = EMenuCategory.NONE;
+    [SerializeField] private List<CourseData> _questionsPerCourses = new List<CourseData>();
 
     public List<Course> Courses()
     {
         List<Course> courses = new List<Course>();
-        foreach (CourseData courseData in _courses)
+        foreach (CourseData courseData in _questionsPerCourses)
         {
             courses.Add(courseData.Course);
         }

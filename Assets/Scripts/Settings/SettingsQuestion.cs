@@ -10,19 +10,19 @@ public class SettingsQuestion : SerializedScriptableObject
     private bool _isUpdating = false;
     [SerializeField, Button("Update Questions ID")] private void UpdateIDs()
     {
-        if(_categories == null || _isUpdating)
+        if(_questionsPerCategory == null || _isUpdating)
         {
             return;
         }
         _isUpdating = true;
         int id = 0;
-        foreach (CategoryData categoryData in _categories)
+        foreach (CategoryData categoryData in _questionsPerCategory)
         {
-            if(categoryData == null || categoryData.Category == null || categoryData.Category.CoursesData == null)
+            if(categoryData == null || categoryData.Category == null || categoryData.Category.QuestionsPerCourses == null)
             {
                 continue;
             }
-            foreach (CourseData courseData in categoryData.Category.CoursesData)
+            foreach (CourseData courseData in categoryData.Category.QuestionsPerCourses)
             {
                 if(courseData.Course == null || courseData.Course.Questions == null)
                 {
@@ -43,7 +43,9 @@ public class SettingsQuestion : SerializedScriptableObject
     }
     [Min(5f), SerializeField] private int _questionsPerMatch = 15;
     [Min(5f), SerializeField] private float _timePerQuestion = 15f;
-    [SerializeField] private List<CategoryData> _categories = new List<CategoryData>();
+    [SerializeField] private List<CategoryData> _questionsPerCategory = new List<CategoryData>();
+    [SerializeField] private List<Question> _questions = new List<Question>();
+    [SerializeField, HideLabel] private CourseUrlList _courseUrlList = new CourseUrlList();
 
     public Stack<Question> GetQuestions(EMenuCategory categoryType, EMenuMode menuModeType, EMenuCourse courseType)
     {
@@ -72,7 +74,7 @@ public class SettingsQuestion : SerializedScriptableObject
     public Category GetCategory(EMenuCategory categoryType)
     {
         Category newCategory = new Category();
-        foreach (CategoryData data in _categories)
+        foreach (CategoryData data in _questionsPerCategory)
         {
             if(data.Category.CategoryType == categoryType)
             {
@@ -88,9 +90,9 @@ public class SettingsQuestion : SerializedScriptableObject
         List<Course> courses = new List<Course>();
         if(gameMode == EMenuMode.MANUAL)
         {
-            if(courseType != EMenuCourse.NONE && category.CoursesData != null && category.CoursesData.Count > 0)
+            if(courseType != EMenuCourse.NONE && category.QuestionsPerCourses != null && category.QuestionsPerCourses.Count > 0)
             {
-                foreach (CourseData courseData in category.CoursesData)
+                foreach (CourseData courseData in category.QuestionsPerCourses)
                 {
                     if(courseData.Course.CourseType == courseType)
                     {
@@ -102,9 +104,9 @@ public class SettingsQuestion : SerializedScriptableObject
         }
         else
         {
-            if(category.CoursesData != null && category.CoursesData.Count > 0)
+            if(category.QuestionsPerCourses != null && category.QuestionsPerCourses.Count > 0)
             {
-                foreach (CourseData courseData in category.CoursesData)
+                foreach (CourseData courseData in category.QuestionsPerCourses)
                 {
                     courses.Add(new Course(courseData.Course));
                 }
@@ -116,9 +118,9 @@ public class SettingsQuestion : SerializedScriptableObject
     public Course GetCourse(Category category, EMenuCourse courseType)
     {
         Course newCourse = new Course();
-        if(category.CoursesData != null && category.CoursesData.Count > 0)
+        if(category.QuestionsPerCourses != null && category.QuestionsPerCourses.Count > 0)
         {
-            foreach (CourseData courseData in category.CoursesData)
+            foreach (CourseData courseData in category.QuestionsPerCourses)
             {
                 if(courseData.Course.CourseType == courseType)
                 {
@@ -134,9 +136,9 @@ public class SettingsQuestion : SerializedScriptableObject
     {
         EMenuCourse courseType = EMenuCourse.NONE;
         Category category = GetCategory(categoryType);
-        if(category != null && category.CoursesData != null)
+        if(category != null && category.QuestionsPerCourses != null)
         {
-            foreach (CourseData courseData in category.CoursesData)
+            foreach (CourseData courseData in category.QuestionsPerCourses)
             {
                 if(courseData.Course == null || courseData.Course.Questions == null)
                 {
