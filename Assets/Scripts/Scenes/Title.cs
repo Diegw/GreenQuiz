@@ -8,26 +8,11 @@ public class Title : MonoBehaviourCustom
 
     [SerializeField] private Image _logo = null;
     [SerializeField] private ButtonCustom _continueButton = null;
-    private SettingsTitle _settingsTitle = null;
     private bool _hasSceneFinished = false;
 
     protected override void Awake()
     {
-        if(AreThereNullReferences(_logo, _continueButton))
-        {
-            return;
-        }
-        Settings();
-    }
-
-    private void Settings()
-    {
-        _settingsTitle = SettingsManager.Title;
-        if(_settingsTitle == null)
-        {
-            Debug.LogError("Title settings is null");
-            return;
-        }
+        AreThereNullReferences(_logo, _continueButton);
     }
 
     private void OnEnable()

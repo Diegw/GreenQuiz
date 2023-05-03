@@ -327,7 +327,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _settingsAssets: {fileID: 11400000, guid: ca22c54293225994aa4ecf539699380b, type: 2}
   _settingsSplash: {fileID: 11400000, guid: e41451782adda2247b862daa758cd3ae, type: 2}
-  _settingsTitle: {fileID: 11400000, guid: 64dd2f20c0e407a42ad182f9d7cea4b4, type: 2}
   _settingsScenes: {fileID: 11400000, guid: 35c088cf786c3ef46b03f8de3ef7abda, type: 2}
   _settingsMenu: {fileID: 11400000, guid: 1be32550f94bef04a8374f1097f9c0ee, type: 2}
   _settingsQuestion: {fileID: 11400000, guid: c949b6dd39075894fbfb0c1012043970, type: 2}

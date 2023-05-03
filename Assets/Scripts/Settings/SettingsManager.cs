@@ -27,17 +27,6 @@ public class SettingsManager : MonoBehaviour, IManager
             return _instance._settingsSplash;
         }
     }
-    public static SettingsTitle Title
-    {
-        get
-        {
-            if(_instance == null || _instance._settingsTitle == null)
-            {
-                return null;
-            }
-            return _instance._settingsTitle;
-        }
-    }
     public static SettingsScenes Scenes
     {
         get
@@ -75,7 +64,6 @@ public class SettingsManager : MonoBehaviour, IManager
     private static SettingsManager _instance = null;
     [SerializeField] private SettingsAssets _settingsAssets = null;
     [SerializeField] private SettingsSplash _settingsSplash = null;
-    [SerializeField] private SettingsTitle _settingsTitle = null;
     [SerializeField] private SettingsScenes _settingsScenes = null;
     [SerializeField] private SettingsMenu _settingsMenu = null;
     [SerializeField] private SettingsQuestion _settingsQuestion = null;
