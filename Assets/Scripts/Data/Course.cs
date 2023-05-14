@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Sirenix.OdinInspector;
 
 [Serializable] public class Course
 {
@@ -11,22 +10,34 @@ using Sirenix.OdinInspector;
         if(course != null)
         {
             _courseType = course.CourseType;
-            _questions = new List<Question>(course.Questions);
+            _questionsData = new List<QuestionData>(course.QuestionsData);
         }
     }
     public EMenuCourse CourseType => _courseType;
-    public string URL => _url;
-    public List<Question> Questions => _questions;
+    public List<QuestionData> QuestionsData => _questionsData;
     
     [SerializeField] private EMenuCourse _courseType = EMenuCourse.NONE;
-    [SerializeField] private string _url = "https://www.greentecher.com/";
-    [SerializeField] private List<Question> _questions = new List<Question>();
+    [SerializeField] private List<QuestionData> _questionsData = new List<QuestionData>();
+
+    public List<Question> GetQuestions()
+    {
+        List<Question> questions = new List<Question>();
+        foreach (QuestionData questionData in _questionsData)
+        {
+            if (questionData == null || questionData.Question == null)
+            {
+                continue;
+            }
+            questions.Add(questionData.Question);
+        }
+        return questions;
+    }
 
     public Question GetQuestion(int questionIndex)
     {
-        if(questionIndex < _questions.Count)
+        if(questionIndex < _questionsData.Count)
         {
-            return _questions[questionIndex];
+            return _questionsData[questionIndex].Question;
         }
         return new Question();
     }

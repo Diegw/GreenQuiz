@@ -24,17 +24,17 @@ public class SettingsQuestion : SerializedScriptableObject
             }
             foreach (CourseData courseData in categoryData.Category.QuestionsPerCourses)
             {
-                if(courseData.Course == null || courseData.Course.Questions == null)
+                if(courseData.Course == null || courseData.Course.QuestionsData == null)
                 {
                     continue;
                 }
-                foreach (Question question in courseData.Course.Questions)
+                foreach (QuestionData questionData in courseData.Course.QuestionsData)
                 {
-                    if(question == null)
+                    if(questionData == null || questionData.Question == null)
                     {
                         continue;
                     }
-                    question.SetID(id);
+                    questionData.Question.SetID(id);
                     id++;
                 }
             }
@@ -44,7 +44,6 @@ public class SettingsQuestion : SerializedScriptableObject
     [Min(5f), SerializeField] private int _questionsPerMatch = 15;
     [Min(5f), SerializeField] private float _timePerQuestion = 15f;
     [SerializeField] private List<CategoryData> _questionsPerCategory = new List<CategoryData>();
-    [SerializeField] private List<Question> _questions = new List<Question>();
     [SerializeField, HideLabel] private CourseUrlList _courseUrlList = new CourseUrlList();
 
     public Stack<Question> GetQuestions(EMenuCategory categoryType, EMenuMode menuModeType, EMenuCourse courseType)
@@ -63,7 +62,7 @@ public class SettingsQuestion : SerializedScriptableObject
             for (int i = 0; i < _questionsPerMatch; i++)
             {
                 int randomCourseIndex = UnityEngine.Random.Range(0, courses.Count);
-                questions = courses[randomCourseIndex].Questions;
+                questions = courses[randomCourseIndex].GetQuestions();
                 int randomQuestionIndex = UnityEngine.Random.Range(0, questions.Count);
                 randomQuestions.Push(new Question(questions[randomQuestionIndex]));
             }
@@ -140,13 +139,17 @@ public class SettingsQuestion : SerializedScriptableObject
         {
             foreach (CourseData courseData in category.QuestionsPerCourses)
             {
-                if(courseData.Course == null || courseData.Course.Questions == null)
+                if(courseData.Course == null || courseData.Course.QuestionsData == null)
                 {
                     continue;
                 }
-                foreach (Question question in courseData.Course.Questions)
+                foreach (QuestionData questionData in courseData.Course.QuestionsData)
                 {
-                    if(question.ID == questionID)
+                    if(questionData == null || questionData.Question == null)
+                    {
+                        continue;
+                    }
+                    if(questionData.Question.ID == questionID)
                     {
                         courseType = courseData.Course.CourseType;
                         break;
