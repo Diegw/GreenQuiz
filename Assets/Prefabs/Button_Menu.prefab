@@ -86,7 +86,6 @@ GameObject:
   - component: {fileID: 5239733977195122233}
   - component: {fileID: 2001675774550107529}
   - component: {fileID: 5198370421653746350}
-  - component: {fileID: 8059247704835802542}
   m_Layer: 5
   m_Name: Button_Menu
   m_TagString: Untagged
@@ -170,60 +169,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &8059247704835802542
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1152645164286411268}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3584cee50ecdbcb49911c1d00f6745ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _customAssets:
-  - _customAsset:
-      _assetID:
-        _spriteID: 0
-        _colorSpriteID: 0
-        _colorTextID: 0
-      _displays: []
-      _images:
-      - {fileID: 4952086977724549428}
-  - _customAsset:
-      _assetID:
-        _spriteID: 0
-        _colorSpriteID: 0
-        _colorTextID: 0
-      _displays: []
-      _images:
-      - {fileID: 1224453819691570358}
-  - _customAsset:
-      _assetID:
-        _spriteID: 0
-        _colorSpriteID: 0
-        _colorTextID: 0
-      _displays: []
-      _images:
-      - {fileID: 5159183066469824298}
-  - _customAsset:
-      _assetID:
-        _spriteID: 0
-        _colorSpriteID: 0
-        _colorTextID: 2
-      _displays:
-      - {fileID: 0}
-      _images:
-      - {fileID: 235777600085952246}
-  - _customAsset:
-      _assetID:
-        _spriteID: 0
-        _colorSpriteID: 0
-        _colorTextID: 0
-      _displays: []
-      _images:
-      - {fileID: 1823104379618395320}
 --- !u!1 &1296333051051278897
 GameObject:
   m_ObjectHideFlags: 0
@@ -364,7 +309,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 98fcf53ebd63ad0438717f96d79a2606, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -514,7 +459,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 98fcf53ebd63ad0438717f96d79a2606, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

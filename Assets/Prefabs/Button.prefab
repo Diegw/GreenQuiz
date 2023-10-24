@@ -445,7 +445,6 @@ GameObject:
   - component: {fileID: 822334489988140622}
   - component: {fileID: 6348284456580244990}
   - component: {fileID: 863161492488893145}
-  - component: {fileID: 3172488522231170521}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -531,60 +530,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &3172488522231170521
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5485883788142838387}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3584cee50ecdbcb49911c1d00f6745ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _customAssets:
-  - _customAsset:
-      _assetID:
-        _spriteID: 0
-        _colorSpriteID: 0
-        _colorTextID: 0
-      _displays: []
-      _images:
-      - {fileID: 533564717345868099}
-  - _customAsset:
-      _assetID:
-        _spriteID: 0
-        _colorSpriteID: 0
-        _colorTextID: 0
-      _displays: []
-      _images:
-      - {fileID: 5990034705819309249}
-  - _customAsset:
-      _assetID:
-        _spriteID: 0
-        _colorSpriteID: 0
-        _colorTextID: 0
-      _displays: []
-      _images:
-      - {fileID: 308456154507114333}
-  - _customAsset:
-      _assetID:
-        _spriteID: 0
-        _colorSpriteID: 0
-        _colorTextID: 2
-      _displays:
-      - {fileID: 6747025073419125823}
-      _images:
-      - {fileID: 4655425606825477761}
-  - _customAsset:
-      _assetID:
-        _spriteID: 0
-        _colorSpriteID: 0
-        _colorTextID: 0
-      _displays: []
-      _images:
-      - {fileID: 6526337430974629071}
 --- !u!1 &5918647574361506374
 GameObject:
   m_ObjectHideFlags: 0

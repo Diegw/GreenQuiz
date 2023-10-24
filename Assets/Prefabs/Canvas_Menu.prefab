@@ -438,7 +438,6 @@ GameObject:
   - component: {fileID: 8016348984977823934}
   - component: {fileID: 8016348984977823933}
   - component: {fileID: 8016348984977823932}
-  - component: {fileID: 1543423243007194721}
   m_Layer: 5
   m_Name: Canvas_Menu
   m_TagString: Untagged
@@ -527,36 +526,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 55
---- !u!114 &1543423243007194721
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8016348984977823931}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3584cee50ecdbcb49911c1d00f6745ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _customAssets:
-  - _customAsset:
-      _assetID:
-        _spriteID: 0
-        _colorSpriteID: 0
-        _colorTextID: 0
-      _displays: []
-      _images:
-      - {fileID: 0}
-  - _customAsset:
-      _assetID:
-        _spriteID: 0
-        _colorSpriteID: 0
-        _colorTextID: 2
-      _displays:
-      - {fileID: 8016348984500622884}
-      _images:
-      - {fileID: 8016348984386741291}
 --- !u!1 &8016348985003846787
 GameObject:
   m_ObjectHideFlags: 0
@@ -687,6 +656,10 @@ PrefabInstance:
     - target: {fileID: 822334489988140622, guid: 87b4d788e4e9bf047a5860432163dae6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4042392570679854336, guid: 87b4d788e4e9bf047a5860432163dae6, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.1000061
       objectReference: {fileID: 0}
     - target: {fileID: 5485883788142838387, guid: 87b4d788e4e9bf047a5860432163dae6, type: 3}
       propertyPath: m_Name
@@ -1097,6 +1070,10 @@ PrefabInstance:
     - target: {fileID: 822334489988140622, guid: 87b4d788e4e9bf047a5860432163dae6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4042392570679854336, guid: 87b4d788e4e9bf047a5860432163dae6, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.1000061
       objectReference: {fileID: 0}
     - target: {fileID: 5485883788142838387, guid: 87b4d788e4e9bf047a5860432163dae6, type: 3}
       propertyPath: m_Name
