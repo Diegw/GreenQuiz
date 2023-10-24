@@ -11,10 +11,12 @@ public class Results : SerializedMonoBehaviour
     [TabGroup("DEBUG"), SerializeField] private int _totalCorrectAnswers = 0;
     [TabGroup("DEBUG"), SerializeField] private Dictionary<EMenuCourse, Vector3Int> _coursesResults = new Dictionary<EMenuCourse, Vector3Int>();
     private SettingsQuestion _settingsQuestion = null;
+    private SettingsMenu _settingsMenu = null;
 
     private void Awake()
     {
         _settingsQuestion = SettingsManager.Question;
+        _settingsMenu = SettingsManager.Menu;
     }
 
     private void OnEnable()
@@ -54,11 +56,10 @@ public class Results : SerializedMonoBehaviour
 
     private void PrepareResults()
     {
-        Category category = _settingsQuestion.GetCategory(GameManager.Category);
-        string title = category.Name;
+        string title = _settingsMenu.GetCategoryName(GameManager.Category);
         if (GameManager.Mode == EMenuMode.MANUAL)
         {
-            title = _settingsQuestion.GetCourse(category, GameManager.Course).Name;
+            title = _settingsMenu.GetCourseName(GameManager.Course);
         }
         ResultsData resultsData = new ResultsData(title, _totalCorrectAnswers, _settingsQuestion.QuestionsPerMatch);
         OnResultsDataReadyEvent?.Invoke(resultsData);

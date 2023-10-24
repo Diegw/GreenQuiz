@@ -60,26 +60,11 @@ public class SettingsMenu : SerializedScriptableObject
         {
             return categoryName;
         }
+
         categoryName = _categories[categoryType].Name;
         return categoryName;
     }
 
-    public EMenuCategory GetFirstCategory()
-    {
-        EMenuCategory firstCategory = EMenuCategory.NONE;
-        int index = 0;
-        foreach (EMenuCategory category in _categories.Keys)
-        {
-            firstCategory = category;
-            if (index == 1)
-            {
-                break;
-            }
-            index++;
-        }
-        return firstCategory;
-    }
-    
     public EMenuCategory[] GetCategories()
     {
         EMenuCategory[] categories = new EMenuCategory[_categories.Count];
@@ -208,6 +193,30 @@ public class SettingsMenu : SerializedScriptableObject
             courses = _coursesPerCategory[category];
         }
         return courses;
+    }
+    
+    public EMenuCourse GetNewCourse(bool next, EMenuCourse course,EMenuCategory category)
+    {
+        if (_coursesPerCategory == null || !_coursesPerCategory.ContainsKey(category))
+        {
+            return EMenuCourse.NONE;
+        }
+        EMenuCourse[] courses = _coursesPerCategory[category];
+        int newIndex = 0;
+        EMenuCourse newCourse = EMenuCourse.NONE;
+        for (int i = 0; i < courses.Length; i++)
+        {
+            newIndex = next ? 
+                i + 1 >= courses.Length ? 0 : i+1 : 
+                i -1 < 0 ? courses.Length-1 : i-1;
+
+            if (newIndex < courses.Length && newIndex >= 0 && courses[i] == course)
+            {
+                newCourse = courses[newIndex];
+                break;
+            }
+        }
+        return newCourse;
     }
 #endregion
 
