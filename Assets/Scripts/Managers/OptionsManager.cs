@@ -3,66 +3,54 @@ using UnityEngine.UI;
 
 public class OptionsManager : MonoBehaviour, IManager
 {
-    [SerializeField] private Button _optionsButton = null;
+    [SerializeField] private GameObject _optionsUI = null;
     [SerializeField] private GameObject _optionsBlocker = null;
-    [SerializeField] private GameObject _optionsMenu = null;
+    [SerializeField] private Button _optionsButton = null;
 
     public void Contruct()
     {
         SetOptions(false);
-        DeactivateOptions();
     }
 
     public void Activate()
     {
+        SubscriptionButton();
+        Options.OnResumeButtonEvent += SetOptions;
+        ScenesManager.OnSceneUnloadedEvent += OnSceneUnloaded;
         ScenesManager.OnSceneLoadedEvent += OnSceneLoaded;
     }
 
     public void Deactivate()
     {
-        DeactivateOptions();
+        UnsubscriptionButton();
+        Options.OnResumeButtonEvent -= SetOptions;
+        ScenesManager.OnSceneUnloadedEvent -= OnSceneUnloaded;
         ScenesManager.OnSceneLoadedEvent -= OnSceneLoaded;
     }
 
-    private void OnSceneLoaded(EScene sceneType)
+    private void OnSceneUnloaded(EScene sceneType)
     {
-        if (sceneType != EScene.MENU && sceneType != EScene.GAMEPLAY)
-        {
-            return;
-        }
-        ActivateOptions();
-    }
-
-    private void ActivateOptions()
-    {
-        if (_optionsButton)
-        {
-            SetGameObjectActive(_optionsButton.gameObject, true);
-        }
-        SubscriptionButton();
+        SetOptions(false);
     }
     
-    private void DeactivateOptions()
+    private void OnSceneLoaded(EScene sceneType)
     {
-        if (_optionsButton)
-        {
-            SetGameObjectActive(_optionsButton.gameObject, false);
-        }
-        DesubscriptionButton();
+        bool enableOptionsInScene = sceneType == EScene.MENU || sceneType == EScene.GAMEPLAY;
+        SetGameObjectActive(_optionsButton.gameObject, enableOptionsInScene);
     }
 
     private void SubscriptionButton()
     {
-        if (_optionsButton == null)
+        if (_optionsUI == null)
         {
             return;
         }
         _optionsButton.onClick.AddListener(ToggleOptions);
     }
     
-    private void DesubscriptionButton()
+    private void UnsubscriptionButton()
     {
-        if (_optionsButton == null)
+        if (_optionsUI == null)
         {
             return;
         }
@@ -71,21 +59,21 @@ public class OptionsManager : MonoBehaviour, IManager
 
     private void ToggleOptions()
     {
-        if (_optionsMenu == null)
+        if (_optionsUI == null)
         {
             return;
         }
-        SetOptions(!_optionsMenu.activeSelf);
+        SetOptions(!_optionsUI.gameObject.activeSelf);
     }
     
     private void SetOptions(bool newState)
     {
-        if (_optionsMenu == null)
+        if (_optionsUI == null || _optionsBlocker == null)
         {
             return;
         }
-        SetGameObjectActive(_optionsMenu, newState);
-        SetGameObjectActive(_optionsBlocker, newState);
+        SetGameObjectActive(_optionsUI.gameObject, newState);
+        SetGameObjectActive(_optionsBlocker.gameObject, newState);
     }
 
     private void SetGameObjectActive(GameObject objectToSet, bool newState)
