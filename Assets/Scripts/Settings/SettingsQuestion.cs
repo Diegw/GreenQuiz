@@ -35,6 +35,7 @@ public class SettingsQuestion : SerializedScriptableObject
                         continue;
                     }
                     questionData.Question.SetID(id);
+                    questionData.SetQuestionName();
                     id++;
                 }
             }

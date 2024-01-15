@@ -14,8 +14,8 @@ using Sirenix.OdinInspector;
     [FoldoutGroup("@_questionName"), SerializeField, HideLabel, OnValueChanged(nameof(SetQuestionName),true)] 
     private Question _question;
 
-    private void SetQuestionName()
+    public void SetQuestionName()
     {
-        _questionName = $"Question {_question.ID}";
+        _questionName = $"Question {_question.ID+1}";
     }
 }
