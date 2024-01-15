@@ -412,6 +412,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Options
       objectReference: {fileID: 0}
+    - target: {fileID: 5152447038867209964, guid: 7d2699227699630499a87bbbf043b90b, type: 3}
+      propertyPath: m_RenderMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5152447038867209965, guid: 7d2699227699630499a87bbbf043b90b, type: 3}
+      propertyPath: m_UiScaleMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5152447038867209965, guid: 7d2699227699630499a87bbbf043b90b, type: 3}
+      propertyPath: m_ReferenceResolution.x
+      value: 1080
+      objectReference: {fileID: 0}
+    - target: {fileID: 5152447038867209965, guid: 7d2699227699630499a87bbbf043b90b, type: 3}
+      propertyPath: m_ReferenceResolution.y
+      value: 1920
+      objectReference: {fileID: 0}
     - target: {fileID: 5541872393932496916, guid: 7d2699227699630499a87bbbf043b90b, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
