@@ -864,6 +864,7 @@ MonoBehaviour:
   _currentCourse: 0
   _instructionsDisplay: {fileID: 5953866737574351981}
   _itemDisplay: {fileID: 813796212}
+  _itemImage: {fileID: 4464027528636584119}
   _leftButton:
     _button: {fileID: 6199925243897884529}
     _display: {fileID: 0}
@@ -1202,10 +1203,10 @@ RectTransform:
   m_Father: {fileID: 8503228560367835256}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 500, y: 700}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4464027528636584119
 MonoBehaviour:
