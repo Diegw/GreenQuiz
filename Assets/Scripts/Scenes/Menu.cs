@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using TMPro;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class Menu : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class Menu : MonoBehaviour
     [Header("UI")]
     [SerializeField] private TMP_Text _instructionsDisplay = null;
     [SerializeField] private TMP_Text _itemDisplay = null;
+    [SerializeField] private Image _itemImage = null;
     [SerializeField] private ButtonCustom _leftButton = null;
     [SerializeField] private ButtonCustom _rightButton = null;
     [SerializeField] private ButtonCustom _continueButton = null;
@@ -82,12 +84,14 @@ public class Menu : MonoBehaviour
     {
         ChangeSelection(true);
         SetSelectionNames();
+        SetSelectionImages();
     }
 
     private void ChangePreviousSelection()
     {
         ChangeSelection(false);
         SetSelectionNames();
+        SetSelectionImages();
     }
 
     private void ChangeSelection(bool next)
@@ -202,29 +206,7 @@ public class Menu : MonoBehaviour
             return;
         }
         SetSelectionNames();
-        int itemCount = 0;
-        Sprite[] sprites = null;
-        switch (actualState)
-        {
-            case EMenuState.CATEGORIES:
-            {
-                itemCount = _menuSettings.GetCategoriesCount();
-                sprites = _menuSettings.GetCategoriesSprites();
-                break;
-            }
-            case EMenuState.MODES:
-            {
-                itemCount = _menuSettings.GetModesCount();
-                sprites = _menuSettings.GetModesSprites();
-                break;
-            }
-            case EMenuState.COURSES:
-            {
-                itemCount = _menuSettings.GetCoursesCount(GameManager.Category);
-                sprites = _menuSettings.GetCoursesSprites(GameManager.Category);
-                break;
-            } 
-        }
+        SetSelectionImages();
     }
 
     private void SetSelectionNames()
@@ -249,5 +231,33 @@ public class Menu : MonoBehaviour
             } 
         }
         _itemDisplay.text = itemName;
+    }
+    
+    private void SetSelectionImages()
+    {
+        Sprite itemImage = null;
+        switch (_currentState)
+        {
+            case EMenuState.CATEGORIES:
+            {
+                itemImage = _menuSettings.GetCategorySprite(_currentCategory);
+                break;
+            }
+            case EMenuState.MODES:
+            {
+                itemImage = _menuSettings.GetModeSprite(_currentMode);
+                break;
+            }
+            case EMenuState.COURSES:
+            {
+                itemImage = _menuSettings.GetCourseSprite(_currentCourse);
+                break;
+            } 
+        }
+        if (_itemImage && itemImage)
+        {
+            _itemImage.sprite = itemImage;
+            _itemImage.SetNativeSize();
+        }
     }
 }
