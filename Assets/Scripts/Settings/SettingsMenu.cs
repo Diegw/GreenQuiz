@@ -41,16 +41,14 @@ public class SettingsMenu : SerializedScriptableObject
         return _categories.Count;
     }
 
-    public Sprite[] GetCategoriesSprites()
+    public Sprite GetCategorySprite(EMenuCategory categoryType)
     {
-        Sprite[] sprites = new Sprite[_categories.Count];
-        int index = 0;
-        foreach (var category in _categories.Values)
+        if(_categories == null || !_categories.ContainsKey(categoryType))
         {
-            sprites[index] = category.Image;
-            index++;
+            return null;
         }
-        return sprites;
+        Sprite categorySprite = _categories[categoryType].Image;
+        return categorySprite;
     }
 
     public string GetCategoryName(EMenuCategory categoryType)
@@ -84,16 +82,14 @@ public class SettingsMenu : SerializedScriptableObject
         return _modes.Count;
     }
 
-    public Sprite[] GetModesSprites()
+    public Sprite GetModeSprite(EMenuMode modeType)
     {
-        Sprite[] sprites = new Sprite[_modes.Count];
-        int index = 0;
-        foreach (var mode in _modes.Values)
+        if(_modes == null || !_modes.ContainsKey(modeType))
         {
-            sprites[index] = mode.Image;
-            index++;
+            return null;
         }
-        return sprites;
+        Sprite modeSprite = _modes[modeType].Image;
+        return modeSprite;
     }
 
     public string GetModeName(EMenuMode modeType)
@@ -137,6 +133,16 @@ public class SettingsMenu : SerializedScriptableObject
 #endregion
 
 #region COURSES
+    public Sprite GetCourseSprite(EMenuCourse course)
+    {
+        Sprite courseSprite = null;
+        if (_courses != null && _courses.ContainsKey(course))
+        {
+            courseSprite = _courses[course].Image;
+        }
+        return courseSprite;
+    }
+    
     public string GetCourseName(EMenuCourse course)
     {
         string courseName = "";
@@ -151,21 +157,6 @@ public class SettingsMenu : SerializedScriptableObject
     {
         EMenuCourse[] courses = GetCategoryCourses(category);
         return courses == null ? 0 : courses.Length;
-    }
-
-    public Sprite[] GetCoursesSprites(EMenuCategory category)
-    {
-        Sprite[] sprites = null;
-        EMenuCourse[] courses = GetCategoryCourses(category);
-        if(courses != null && _courses != null)
-        {
-            sprites = new Sprite[courses.Length];
-            for (int i = 0; i < courses.Length; i++)
-            {
-                sprites[i] = _courses[courses[i]].Image;
-            }
-        }
-        return sprites;
     }
 
     public EMenuCourse GetFirstCourse(EMenuCategory category)
