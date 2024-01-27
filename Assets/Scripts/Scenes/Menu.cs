@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using TMPro;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class Menu : MonoBehaviour
+public class Menu : SerializedMonoBehaviour
 {
     public static Action<EMenuState> OnStateChangedEvent;
     public static Action<EDirection> OnSceneFinishedEvent;
@@ -23,6 +25,7 @@ public class Menu : MonoBehaviour
     [SerializeField] private ButtonCustom _continueButton = null;
     [SerializeField] private EMenuCategory[] _categories = null;
     [SerializeField] private EMenuMode[] _modes = null;
+    [SerializeField] private Dictionary<EMenuCategory, Animator> _animators = new Dictionary<EMenuCategory, Animator>();
     private SettingsMenu _menuSettings = null;
 
     private void Awake()
@@ -240,8 +243,9 @@ public class Menu : MonoBehaviour
         {
             case EMenuState.CATEGORIES:
             {
-                itemImage = _menuSettings.GetCategorySprite(_currentCategory);
-                break;
+                SetAnimationCategory();
+                // itemImage = _menuSettings.GetCategorySprite(_currentCategory);
+                return;
             }
             case EMenuState.MODES:
             {
@@ -258,6 +262,19 @@ public class Menu : MonoBehaviour
         {
             _itemImage.sprite = itemImage;
             _itemImage.SetNativeSize();
+            _itemImage.gameObject.SetActive(true);
+        }
+    }
+
+    private void SetAnimationCategory()
+    {
+        foreach (var animator in _animators)
+        {
+            if (animator.Key == EMenuCategory.NONE || animator.Value == null)
+            {
+                continue;
+            }
+            animator.Value.gameObject.SetActive(animator.Key == _currentCategory);
         }
     }
 }
