@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using Sirenix.OdinInspector;
 using TMPro;
 
-public class GameplayUI : MonoBehaviour
+public class GameplayUI : SerializedMonoBehaviour
 {
     public static Action<int> OnChoicePressedEvent;
 
@@ -17,10 +17,24 @@ public class GameplayUI : MonoBehaviour
     [TabGroup("REFERENCES"), SerializeField] private TMP_Text _questionNumber = null;
     [TabGroup("REFERENCES"), SerializeField] private TMP_Text _questionDescription = null;
     [TabGroup("REFERENCES"), SerializeField] private List<ButtonCustom> _choiceButtons = new List<ButtonCustom>();
+    [SerializeField] private Dictionary<EMenuCategory, Animator> _animators = new Dictionary<EMenuCategory, Animator>();
 
     private void Awake()
     {
         ToggleGameplayUI(true);
+        SetAnimationCategory();
+    }
+    
+    private void SetAnimationCategory()
+    {
+        foreach (var animator in _animators)
+        {
+            if (animator.Key == EMenuCategory.NONE || animator.Value == null)
+            {
+                continue;
+            }
+            animator.Value.gameObject.SetActive(animator.Key == GameManager.Category);
+        }
     }
 
     private void OnEnable()
