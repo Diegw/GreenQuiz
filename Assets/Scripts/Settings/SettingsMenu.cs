@@ -159,6 +159,13 @@ public class SettingsMenu : SerializedScriptableObject
         return courses == null ? 0 : courses.Length;
     }
 
+    public EMenuCourse GetRandomCourse(EMenuCategory category)
+    {
+        EMenuCourse[] courses = GetCategoryCourses(category);
+        EMenuCourse randomCourse = courses[Random.Range(0, courses.Length)];
+        return randomCourse;
+    }
+    
     public EMenuCourse GetFirstCourse(EMenuCategory category)
     {
         EMenuCourse firstCourse = EMenuCourse.NONE;

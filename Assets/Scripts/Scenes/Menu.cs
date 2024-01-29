@@ -168,6 +168,10 @@ public class Menu : SerializedMonoBehaviour
         {
             return;
         }
+        if (_currentState == EMenuState.MODES && _currentMode == EMenuMode.RANDOM)
+        {
+            _currentCourse = _menuSettings.GetRandomCourse(_currentCategory);
+        }
         ConfirmSelection();
         EMenuState state = _menuSettings.NewState(_currentState);
         if(state == _currentState)
@@ -176,13 +180,16 @@ public class Menu : SerializedMonoBehaviour
         }
         _currentState = state;
         OnStateChangedEvent?.Invoke(state);
-        if(state == EMenuState.COURSES) _currentCourse = _menuSettings.GetFirstCourse(_currentCategory);
-        SetUI();
+        if (state == EMenuState.COURSES)
+        {
+            _currentCourse = _menuSettings.GetFirstCourse(_currentCategory);
+        }
         if(!_hasSceneFinished && state == EMenuState.GAMEPLAY)
         {
             _hasSceneFinished = true;
             OnSceneFinishedEvent(EDirection.NEXT);
         }
+        SetUI();
     }
 
     private void ConfirmSelection()
@@ -249,11 +256,13 @@ public class Menu : SerializedMonoBehaviour
             }
             case EMenuState.MODES:
             {
+                SetAnimationCategory(true);
                 itemImage = _menuSettings.GetModeSprite(_currentMode);
                 break;
             }
             case EMenuState.COURSES:
             {
+                SetAnimationCategory(true);
                 itemImage = _menuSettings.GetCourseSprite(_currentCourse);
                 break;
             } 
@@ -266,7 +275,7 @@ public class Menu : SerializedMonoBehaviour
         }
     }
 
-    private void SetAnimationCategory()
+    private void SetAnimationCategory(bool hideAll = false)
     {
         foreach (var animator in _animators)
         {
@@ -274,7 +283,7 @@ public class Menu : SerializedMonoBehaviour
             {
                 continue;
             }
-            animator.Value.gameObject.SetActive(animator.Key == _currentCategory);
+            animator.Value.gameObject.SetActive(animator.Key == _currentCategory && hideAll == false);
         }
     }
 }

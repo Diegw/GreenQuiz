@@ -1,11 +1,12 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Sirenix.OdinInspector;
 using UnityEngine.Events;
 
-public class ResultsUI : MonoBehaviour
+public class ResultsUI : SerializedMonoBehaviour
 {
     public static Action OnContinueButtonPressedEvent;
 
@@ -15,9 +16,13 @@ public class ResultsUI : MonoBehaviour
     [TabGroup("REFERENCES"), SerializeField] private Image _stadisticsImage = null;
     [TabGroup("REFERENCES"), SerializeField] private Image _categoryImage = null;
     [TabGroup("REFERENCES"), SerializeField] private ButtonCustom _linkPrincipal = null;
-    [TabGroup("REFERENCES"), SerializeField] private ButtonCustom[] _linkSecondary = null;
+    [TabGroup("REFERENCES"), SerializeField] private ButtonCustom _linkSecondary1 = null;
+    [TabGroup("REFERENCES"), SerializeField] private ButtonCustom _linkSecondary2 = null;
     [TabGroup("REFERENCES"), SerializeField] private ButtonCustom _continueButton = null;
-
+    [SerializeField] private Dictionary<EMenuCategory, Animator> _animators = new Dictionary<EMenuCategory, Animator>();
+    private EMenuCourse _secondaryCourse1 = EMenuCourse.NONE;
+    private EMenuCourse _secondaryCourse2 = EMenuCourse.NONE;
+    
     private void Awake()
     {
         // _settingsQuestion = SettingsManager.Question;
@@ -32,6 +37,8 @@ public class ResultsUI : MonoBehaviour
     {
         Results.OnResultsDataReadyEvent += ShowResults;
         AddButtonListener(_linkPrincipal, LinkPrincipalButton);
+        AddButtonListener(_linkSecondary1, LinkSecondaryButton1);
+        AddButtonListener(_linkSecondary2, LinkSecondaryButton2);
         AddButtonListener(_continueButton, ContinueButton);
     }
 
@@ -39,6 +46,8 @@ public class ResultsUI : MonoBehaviour
     {
         Results.OnResultsDataReadyEvent -= ShowResults;
         RemoveButtonListener(_linkPrincipal, LinkPrincipalButton);
+        RemoveButtonListener(_linkSecondary1, LinkSecondaryButton1);
+        RemoveButtonListener(_linkSecondary2, LinkSecondaryButton2);
         RemoveButtonListener(_continueButton, ContinueButton);
     }
 
@@ -70,14 +79,30 @@ public class ResultsUI : MonoBehaviour
         // _categoryImage.sprite = _settingsQuestion.GetCategorySprite(GameManager.Category);
         _stadisticsImage.fillAmount = (float)resultsData.CorrectAnswers / (float)resultsData.TotalQuestions;
         _stadisticsDisplay.text = $"Preguntas correctas {resultsData.CorrectAnswers} de {resultsData.TotalQuestions}";
+        _linkPrincipal.Display.text = SettingsManager.Menu.GetCourseName(GameManager.Course);
+        _secondaryCourse1 = resultsData.Course1;
+        _secondaryCourse2 = resultsData.Course2;
+        _linkSecondary1.Display.text = SettingsManager.Menu.GetCourseName(_secondaryCourse1);
+        _linkSecondary2.Display.text = SettingsManager.Menu.GetCourseName(_secondaryCourse2);
+        SetAnimationCategory();
         ToggleResultsUI(true);
     }
 
     private void LinkPrincipalButton()
     {
-        Application.OpenURL("https://www.greentecher.com/");
+        Application.OpenURL(SettingsManager.Question.GetCourseUrl(GameManager.Course));
+    }
+    
+    private void LinkSecondaryButton1()
+    {
+        Application.OpenURL(SettingsManager.Question.GetCourseUrl(_secondaryCourse1));
     }
 
+    private void LinkSecondaryButton2()
+    {
+        Application.OpenURL(SettingsManager.Question.GetCourseUrl(_secondaryCourse2));
+    }
+    
     private void ContinueButton()
     {
         //@TODO: maybe check something else before continue
@@ -96,6 +121,18 @@ public class ResultsUI : MonoBehaviour
             return;
         }
         _UI.gameObject.SetActive(stateToSet);
+    }
+    
+    private void SetAnimationCategory()
+    {
+        foreach (var animator in _animators)
+        {
+            if (animator.Key == EMenuCategory.NONE || animator.Value == null)
+            {
+                continue;
+            }
+            animator.Value.gameObject.SetActive(animator.Key == GameManager.Category);
+        }
     }
 
     private bool isThereNullReference()
@@ -133,11 +170,6 @@ public class ResultsUI : MonoBehaviour
         if(_linkPrincipal == null)
         {
             Debug.LogError("Results Link Princiapl isnt assign");
-            return true;
-        }
-        if(_linkSecondary == null || _linkSecondary.Length <= 0)
-        {
-            Debug.LogError("Some Results Link Secondary isnt assign");
             return true;
         }
         if(_continueButton == null || _continueButton.Button == null)

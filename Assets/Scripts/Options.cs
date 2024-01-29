@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class Options : MonoBehaviour
@@ -17,9 +18,16 @@ public class Options : MonoBehaviour
     [SerializeField] private Button _exitYesButton = null;
     [SerializeField] private Button _exitNoButton = null;
     [SerializeField] private Button _creditsReturnButton = null;
+    [FormerlySerializedAs("_audioSource")] [SerializeField] private AudioSource _musicAudioSource = null;
+    private bool _isMusicEnabled = true;
 
     private void Awake()
     {
+        _isMusicEnabled = PlayerPrefs.GetInt("Music") > 0;
+        if (_musicAudioSource && _musicAudioSource.mute != !_isMusicEnabled)
+        {
+            _musicAudioSource.mute = !_isMusicEnabled;
+        }
         SetGameObjectActive(_credits, false);
         SetGameObjectActive(_exitConfirmation, false);
     }
@@ -83,10 +91,17 @@ public class Options : MonoBehaviour
     
     private void Sound()
     {
+        
     }
     
     private void Music()
     {
+        _isMusicEnabled = !_isMusicEnabled;
+        if (_musicAudioSource)
+        {
+            _musicAudioSource.mute = !_isMusicEnabled;
+        }
+        PlayerPrefs.SetInt("Music",_isMusicEnabled?1:0);
     }
 
     private void Credits()

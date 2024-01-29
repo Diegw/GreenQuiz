@@ -857,6 +857,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca60f0f98e635e542b2e4402fafe2a82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _animators
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[EMenuCategory, Assembly-CSharp],[UnityEngine.Animator,
+        UnityEngine.AnimationModule]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[EMenuCategory, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
   _UI: {fileID: 1460633505235752274}
   _titleDisplay: {fileID: 1672499841}
   _stadisticsDisplay: {fileID: 471408859970632075}
@@ -865,10 +900,11 @@ MonoBehaviour:
   _linkPrincipal:
     _button: {fileID: 352510607}
     _display: {fileID: 352510606}
-  _linkSecondary:
-  - _button: {fileID: 1268709773}
+  _linkSecondary1:
+    _button: {fileID: 1268709773}
     _display: {fileID: 1268709772}
-  - _button: {fileID: 503046723}
+  _linkSecondary2:
+    _button: {fileID: 503046723}
     _display: {fileID: 503046722}
   _continueButton:
     _button: {fileID: 2117594165}

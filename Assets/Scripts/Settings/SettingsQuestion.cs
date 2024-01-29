@@ -47,6 +47,16 @@ public class SettingsQuestion : SerializedScriptableObject
     [SerializeField] private List<CategoryData> _questionsPerCategory = new List<CategoryData>();
     [SerializeField, HideLabel] private CourseUrlList _courseUrlList = new CourseUrlList();
 
+    public string GetCourseUrl(EMenuCourse course)
+    {
+        string url = "https://www.greentecher.com/";
+        if (_courseUrlList != null)
+        {
+            url = _courseUrlList.GetUrl(course);
+        }
+        return url;
+    }
+    
     public Stack<Question> GetQuestions(EMenuCategory categoryType, EMenuMode menuModeType, EMenuCourse courseType)
     {
         Stack<Question> randomQuestions = new Stack<Question>();

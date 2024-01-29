@@ -61,7 +61,19 @@ public class Results : SerializedMonoBehaviour
         {
             title = _settingsMenu.GetCourseName(GameManager.Course);
         }
-        ResultsData resultsData = new ResultsData(title, _totalCorrectAnswers, _settingsQuestion.QuestionsPerMatch);
+
+        EMenuCourse secondaryCourse1 = SettingsManager.Menu.GetRandomCourse(GameManager.Category);
+        while (secondaryCourse1 == GameManager.Course)
+        {
+            secondaryCourse1 = SettingsManager.Menu.GetRandomCourse(GameManager.Category);
+        }
+        EMenuCourse secondaryCourse2 = SettingsManager.Menu.GetRandomCourse(GameManager.Category);
+        while (secondaryCourse2 == GameManager.Course || secondaryCourse2 == secondaryCourse1)
+        {
+            secondaryCourse2 = SettingsManager.Menu.GetRandomCourse(GameManager.Category);
+        }
+        ResultsData resultsData = new ResultsData(title, _totalCorrectAnswers, _settingsQuestion.QuestionsPerMatch,
+                                                    secondaryCourse1, secondaryCourse2);
         OnResultsDataReadyEvent?.Invoke(resultsData);
     }
 
