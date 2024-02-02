@@ -101,6 +101,7 @@ public class GameplayUI : SerializedMonoBehaviour
     private void SendChoice(int choiceIndex)
     {
         OnChoicePressedEvent?.Invoke(choiceIndex);
+        AudioManager.PlaySfx();
     }
 
     private void ToggleGameplayUI(bool stateToSet)

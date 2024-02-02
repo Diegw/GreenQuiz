@@ -91,16 +91,19 @@ public class ResultsUI : SerializedMonoBehaviour
     private void LinkPrincipalButton()
     {
         Application.OpenURL(SettingsManager.Question.GetCourseUrl(GameManager.Course));
+        AudioManager.PlaySfx();
     }
     
     private void LinkSecondaryButton1()
     {
         Application.OpenURL(SettingsManager.Question.GetCourseUrl(_secondaryCourse1));
+        AudioManager.PlaySfx();
     }
 
     private void LinkSecondaryButton2()
     {
         Application.OpenURL(SettingsManager.Question.GetCourseUrl(_secondaryCourse2));
+        AudioManager.PlaySfx();
     }
     
     private void ContinueButton()
@@ -112,6 +115,7 @@ public class ResultsUI : SerializedMonoBehaviour
         }
         _continueButton.Button.interactable = false;
         OnContinueButtonPressedEvent?.Invoke();
+        AudioManager.PlaySfx();
     }
 
     private void ToggleResultsUI(bool stateToSet)

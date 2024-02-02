@@ -87,11 +87,13 @@ public class Options : MonoBehaviour
     private void Resume()
     {
         OnResumeButtonEvent?.Invoke(false);
+        AudioManager.PlaySfx();
     }
     
     private void Sound()
     {
         
+        AudioManager.PlaySfx();
     }
     
     private void Music()
@@ -102,6 +104,7 @@ public class Options : MonoBehaviour
             _musicAudioSource.mute = !_isMusicEnabled;
         }
         PlayerPrefs.SetInt("Music",_isMusicEnabled?1:0);
+        AudioManager.PlaySfx();
     }
 
     private void Credits()
@@ -111,20 +114,24 @@ public class Options : MonoBehaviour
             return;
         }
         SetGameObjectActive(_credits, !_credits.activeSelf);
+        AudioManager.PlaySfx();
     }
 
     private void ExitConfirmation()
     {
         SetGameObjectActive(_exitConfirmation, true);
+        AudioManager.PlaySfx();
     }
 
     private void ExitReturn()
     {
         SetGameObjectActive(_exitConfirmation, false);
+        AudioManager.PlaySfx();
     }
     
     private void Exit()
     {
+        AudioManager.PlaySfx();
         Application.Quit();
     }
     

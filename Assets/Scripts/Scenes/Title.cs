@@ -38,5 +38,6 @@ public class Title : MonoBehaviourCustom
         }
         _hasSceneFinished = true;
         OnSceneFinishedEvent?.Invoke(EDirection.NEXT);
+        AudioManager.PlaySfx();
     }
 }

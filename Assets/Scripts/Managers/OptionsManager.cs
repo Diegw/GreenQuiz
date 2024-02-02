@@ -72,6 +72,10 @@ public class OptionsManager : MonoBehaviour, IManager
         {
             return;
         }
+        if (newState)
+        {
+            AudioManager.PlaySfx();
+        }
         SetGameObjectActive(_optionsUI.gameObject, newState);
         SetGameObjectActive(_optionsBlocker.gameObject, newState);
     }

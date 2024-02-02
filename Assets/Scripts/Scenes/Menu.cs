@@ -88,6 +88,7 @@ public class Menu : SerializedMonoBehaviour
         ChangeSelection(true);
         SetSelectionNames();
         SetSelectionImages();
+        AudioManager.PlaySfx();
     }
 
     private void ChangePreviousSelection()
@@ -95,6 +96,7 @@ public class Menu : SerializedMonoBehaviour
         ChangeSelection(false);
         SetSelectionNames();
         SetSelectionImages();
+        AudioManager.PlaySfx();
     }
 
     private void ChangeSelection(bool next)
@@ -190,6 +192,7 @@ public class Menu : SerializedMonoBehaviour
             OnSceneFinishedEvent(EDirection.NEXT);
         }
         SetUI();
+        AudioManager.PlaySfx();
     }
 
     private void ConfirmSelection()
