@@ -175,8 +175,8 @@ MonoBehaviour:
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1080, y: 1920}
-  m_ScreenMatchMode: 1
-  m_MatchWidthOrHeight: 0
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 1
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -272,19 +272,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5239733977195122233, guid: cd0285c6251b9c74bab1eebe2de20d4d, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5239733977195122233, guid: cd0285c6251b9c74bab1eebe2de20d4d, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5239733977195122233, guid: cd0285c6251b9c74bab1eebe2de20d4d, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5239733977195122233, guid: cd0285c6251b9c74bab1eebe2de20d4d, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5239733977195122233, guid: cd0285c6251b9c74bab1eebe2de20d4d, type: 3}
       propertyPath: m_SizeDelta.x
@@ -324,11 +324,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5239733977195122233, guid: cd0285c6251b9c74bab1eebe2de20d4d, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1076
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5239733977195122233, guid: cd0285c6251b9c74bab1eebe2de20d4d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -542
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5239733977195122233, guid: cd0285c6251b9c74bab1eebe2de20d4d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -684,7 +684,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: New Text New Text New Text New Text New Text New Text New Text New Text
-    New Text New Text New Text New Text
+    New Text New Text
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -711,8 +711,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 42
-  m_fontSizeBase: 42
+  m_fontSize: 50
+  m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1487,7 +1487,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5239733977195122233, guid: cd0285c6251b9c74bab1eebe2de20d4d, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5239733977195122233, guid: cd0285c6251b9c74bab1eebe2de20d4d, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -1748,7 +1748,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5953866737277683669, guid: ebbfab3740027b54e9508c41ba4675b0, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5953866737277683669, guid: ebbfab3740027b54e9508c41ba4675b0, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1756,7 +1756,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5953866737277683669, guid: ebbfab3740027b54e9508c41ba4675b0, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5953866737277683669, guid: ebbfab3740027b54e9508c41ba4675b0, type: 3}
       propertyPath: m_AnchorMin.y
@@ -1764,7 +1764,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5953866737277683669, guid: ebbfab3740027b54e9508c41ba4675b0, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 1080
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5953866737277683669, guid: ebbfab3740027b54e9508c41ba4675b0, type: 3}
       propertyPath: m_SizeDelta.y
@@ -1804,7 +1804,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5953866737277683669, guid: ebbfab3740027b54e9508c41ba4675b0, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -148
+      value: -150
       objectReference: {fileID: 0}
     - target: {fileID: 5953866737277683669, guid: ebbfab3740027b54e9508c41ba4675b0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
