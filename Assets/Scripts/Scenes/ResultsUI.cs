@@ -75,7 +75,7 @@ public class ResultsUI : SerializedMonoBehaviour
         {
             return;
         }
-        _titleDisplay.text = resultsData.TitleName;
+        _titleDisplay.text = "Resultados";
         // _categoryImage.sprite = _settingsQuestion.GetCategorySprite(GameManager.Category);
         _stadisticsImage.fillAmount = (float)resultsData.CorrectAnswers / (float)resultsData.TotalQuestions;
         _stadisticsDisplay.text = $"Preguntas correctas {resultsData.CorrectAnswers} de {resultsData.TotalQuestions}";
