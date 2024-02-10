@@ -14,7 +14,6 @@ public class ExecutionManager : SerializedMonoBehaviour
 
     private void Start()
     {
-        Debug.LogWarning("EXECUTION MANAGER");
         if(_instance != null)
         {
             Destroy(gameObject);
@@ -38,7 +37,6 @@ public class ExecutionManager : SerializedMonoBehaviour
             manager.Contruct();
             manager.Activate();
         }
-        Debug.LogWarning("MANAGERS READY");
         OnSetUpReadyEvent?.Invoke(EDirection.NEXT);
     }
 }
