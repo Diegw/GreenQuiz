@@ -16,7 +16,8 @@ public class AudioManager : MonoBehaviour, IManager
     public void Activate()
     {
         string musicState = PlayerPrefs.GetString("Music");
-        if (_musicAudioSource && _musicAudioSource.mute != !_isMusicEnabled)
+        Debug.LogError(musicState);
+        if (_musicAudioSource)
         {
             if (musicState is "Disabled")
             {
@@ -26,7 +27,7 @@ public class AudioManager : MonoBehaviour, IManager
         }
         
         string sfxState = PlayerPrefs.GetString("Sfx");
-        if (_sfxAudioSource && _sfxAudioSource.mute != !_isSfxEnabled)
+        if (_sfxAudioSource)
         {
             if (sfxState is "Disabled")
             {
