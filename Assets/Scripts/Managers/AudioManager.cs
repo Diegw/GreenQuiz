@@ -16,7 +16,6 @@ public class AudioManager : MonoBehaviour, IManager
     public void Activate()
     {
         string musicState = PlayerPrefs.GetString("Music");
-        Debug.LogError(musicState);
         if (_musicAudioSource)
         {
             if (musicState is "Disabled")
