@@ -22,7 +22,12 @@ public class AudioManager : MonoBehaviour, IManager
             {
                 _isMusicEnabled = false;
             }
+            else
+            {
+                _isMusicEnabled = true;
+            }
             _musicAudioSource.mute = !_isMusicEnabled;
+            _musicAudioSource.Play();
         }
         
         string sfxState = PlayerPrefs.GetString("Sfx");
